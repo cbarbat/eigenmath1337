@@ -1,0 +1,64 @@
+-- Pratt parser tests:
+--
+-- a sign + or - can be followed by a newline
+-- a binary operator can be followed by a newline
+-- newlines are generally allowed in parentheses or brackets
+------------------------------------------------------------
+clear
+trace=1
+-- function call
+f(
+9
+)
+check(last=f(9))
+-- tensor
+(
+1,
+2
+,3
+)
+check(last=(1,2,3))
+-- array access by index
+a[
+6
+]
+check(last=a[6])
+-- powers
+-2^2
+check(last=-4)
+2^-3
+check(last=2^(-3))
+-3^-2
+check(last=-(3^-2))
+-- sign
+-
+2
+check(last=-2)
+-- binary operator
+1+
+2
+check(last=3)
+-- parentheses
+(2
+a)
+check(last = 2*a)
+-- array access by index
+a[2
+3
+]
+check(last = a[6])
+-- function call
+(f(-2
+3
+)
+-8)
+check(last = (f(-6)-8))
+-- tensor
+((a 
+b, 2,
+3)
+b)
+check(last = (a*b,2,3)*b)
+
+clear
+"Pratt parser tests passed!"

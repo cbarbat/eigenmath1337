@@ -1,0 +1,23 @@
+This is eigenmath with a Pratt parser.
+
+The variable pratt controls the parser and is initialized to the value 1.
+That means that the Pratt parser is used by default.
+If you want to use the recursive descent parser, you need to set:
+pratt = 0.
+
+To build and run under Linux or other Unix-type OS:
+
+	cd src
+	make
+	./eigenmath
+
+Press control-C to exit.
+
+To run a script:
+
+	./eigenmath scriptfilename
+
+Sample scripts are available at www.eigenmath.org
+
+Additionally, there is an EigenMath.sln file for the Visual Studio IDE.
+It contains two projects, which make it possible to compile eigenmath with a Windows GUI and for the Windows console.
