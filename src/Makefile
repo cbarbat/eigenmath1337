@@ -1,8 +1,3 @@
-# To build a new prototypes.h:
-#
-#	gcc make-prototypes.c
-#	./a.out >prototypes.h
-
 CFLAGS = -Wall -O0
 CC = gcc
 
@@ -96,7 +91,6 @@ quotient.o \
 rationalize.o \
 real.o \
 rect.o \
-rewrite.o \
 roots.o \
 run.o \
 scan.o \
@@ -117,8 +111,6 @@ test.o \
 transform.o \
 transpose.o \
 userfunc.o \
-variables.o \
-vectorize.o \
 zero.o
 
 eigenmath : $(objects)
@@ -127,4 +119,4 @@ eigenmath : $(objects)
 $(objects) : defs.h defs1.h prototypes.h
 
 clean :
-	rm -f eigenmath a.out *.o
+	rm -f eigenmath *.o

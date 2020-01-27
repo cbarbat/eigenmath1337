@@ -248,33 +248,6 @@ struct tensor {
 	struct atom *elem[1];
 };
 
-struct display {
-	int h, w, n;
-	struct {
-		int c, x, y;
-	} a[1]; // a for array
-};
-
-struct text_metric {
-	int ascent, descent, width;
-};
-
-/*
-struct display {
-	struct display *next;
-	uint8_t type, attr;
-	int h, w;
-	int tot_h, tot_w;
-	int len;
-	uint8_t buf[0];
-};
-
-struct text_metric {
-	float size;
-	int ascent, descent, width, xheight, em;
-};
-*/
-
 #define symbol(x) (symtab + (x))
 #define push_symbol(x) push(symbol(x))
 #define iscons(p) ((p)->k == CONS)
@@ -285,6 +258,7 @@ struct text_metric {
 #define istensor(p) ((p)->k == TENSOR)
 #define issymbol(p) ((p)->k == SYM)
 #define iskeyword(p) ((p)->k == SYM && (p) - symtab < MARK1)
+#define isadd(p) (car(p) == symbol(ADD))
 
 #define car(p) (iscons(p) ? (p)->u.cons.car : symbol(NIL))
 #define cdr(p) (iscons(p) ? (p)->u.cons.cdr : symbol(NIL))
@@ -310,10 +284,6 @@ struct text_metric {
 #define caddadr(p) car(cdr(cdr(car(cdr(p)))))
 #define cdddaddr(p) cdr(cdr(cdr(car(cdr(cdr(p))))))
 #define caddaddr(p) car(cdr(cdr(car(cdr(cdr(p))))))
-
-#define isadd(p) (car(p) == symbol(ADD))
-#define ispower(p) (car(p) == symbol(POWER))
-#define isfactorial(p) (car(p) == symbol(FACTORIAL))
 
 #define ERR ((int) 0x80000000)
 

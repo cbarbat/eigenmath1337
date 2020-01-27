@@ -33,15 +33,12 @@
     <ClInclude Include="src\windows\help.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\windows\gui.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\zero.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\vectorize.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\variables.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\userfunc.c">
@@ -105,9 +102,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\roots.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\rewrite.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\rect.c">

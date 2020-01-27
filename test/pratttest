@@ -5,6 +5,7 @@
 -- newlines are generally allowed in parentheses or brackets
 ------------------------------------------------------------
 clear
+pratt=1
 trace=1
 -- function call
 f(

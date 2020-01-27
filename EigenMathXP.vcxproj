@@ -135,6 +135,7 @@
     <ClInclude Include="src\defs.h" />
     <ClInclude Include="src\defs1.h" />
     <ClInclude Include="src\prototypes.h" />
+    <ClInclude Include="src\windows\gui.hpp" />
     <ClInclude Include="src\windows\help.h" />
     <ClInclude Include="src\windows\prototypes.hpp" />
     <ClInclude Include="src\windows\resource.h" />
@@ -227,7 +228,6 @@
     <ClCompile Include="src\rationalize.c" />
     <ClCompile Include="src\real.c" />
     <ClCompile Include="src\rect.c" />
-    <ClCompile Include="src\rewrite.c" />
     <ClCompile Include="src\roots.c" />
     <ClCompile Include="src\run.c" />
     <ClCompile Include="src\scan.c" />
@@ -249,8 +249,6 @@
     <ClCompile Include="src\transform.c" />
     <ClCompile Include="src\transpose.c" />
     <ClCompile Include="src\userfunc.c" />
-    <ClCompile Include="src\variables.c" />
-    <ClCompile Include="src\vectorize.c" />
     <ClCompile Include="src\windows\cmdisplay.cpp" />
     <ClCompile Include="src\windows\display.cpp" />
     <ClCompile Include="src\windows\draw.cpp" />

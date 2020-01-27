@@ -1,3 +1,21 @@
+/* January 26, 2020
+
+To build and run:
+
+	gcc -O0 -o eigenmath eigenmath.c -lm
+	./eigenmath
+
+Press control-C to exit.
+
+To run a script:
+
+	./eigenmath scriptfilename
+
+A test script is available here:
+
+	www.eigenmath.org/selftest1
+
+
 BSD 2-Clause License
 
 Copyright (c) 2020, George Weigt, Calin Barbat
@@ -23,3 +41,4 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/

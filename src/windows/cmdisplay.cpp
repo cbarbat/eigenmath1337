@@ -4,6 +4,7 @@
 extern "C" {
 #include "..\defs.h"
 }
+#include "gui.hpp"
 #include "prototypes.hpp"
 
 extern void get_height_width(int *, int *, int, char *s);

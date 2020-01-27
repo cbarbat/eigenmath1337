@@ -4,6 +4,7 @@
 extern "C" {
 #include "..\defs.h"
 }
+#include "gui.hpp"
 #include "prototypes.hpp"
 
 extern int text_width(int, char *);
