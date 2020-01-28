@@ -1,135 +1,47 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dirent.h>
 
-int prev = '\n';
-
+int filter(const struct dirent *p);
 void emit_file(char *);
 void emit_line(char *);
 void check_line(char *, int, char *);
 
+int prev = '\n';
+char filename[100];
+
+#define PATH "../src/"
+
 int
 main()
 {
+	int i, n;
+	struct dirent **p;
 	system("cat preamble.h");
-
-	emit_file("../src/defs1.h");
-	emit_file("../src/prototypes.h");
-
-	emit_file("../src/globals.c");
-	emit_file("../src/main.c");
-	emit_file("../src/run.c");
-	emit_file("../src/scan.c");
-	emit_file("../src/pratt.c");
-	emit_file("../src/eval.c");
-	emit_file("../src/display.c");
-
-	emit_file("../src/abs.c");
-	emit_file("../src/add.c");
-	emit_file("../src/adj.c");
-	emit_file("../src/arccos.c");
-	emit_file("../src/arccosh.c");
-	emit_file("../src/arcsin.c");
-	emit_file("../src/arcsinh.c");
-	emit_file("../src/arctan.c");
-	emit_file("../src/arctanh.c");
-	emit_file("../src/arg.c");
-	emit_file("../src/atomize.c");
-	emit_file("../src/bake.c");
-	emit_file("../src/besselj.c");
-	emit_file("../src/bessely.c");
-	emit_file("../src/binomial.c");
-	emit_file("../src/ceiling.c");
-	emit_file("../src/choose.c");
-	emit_file("../src/circexp.c");
-	emit_file("../src/clock.c");
-	emit_file("../src/coeff.c");
-	emit_file("../src/cofactor.c");
-	emit_file("../src/conj.c");
-	emit_file("../src/contract.c");
-	emit_file("../src/cos.c");
-	emit_file("../src/cosh.c");
-	emit_file("../src/defint.c");
-	emit_file("../src/degree.c");
-	emit_file("../src/denominator.c");
-	emit_file("../src/derivative.c");
-	emit_file("../src/det.c");
-	emit_file("../src/distill.c");
-	emit_file("../src/divisors.c");
-	emit_file("../src/eigen.c");
-	emit_file("../src/erf.c");
-	emit_file("../src/erfc.c");
-	emit_file("../src/exp.c");
-	emit_file("../src/expand.c");
-	emit_file("../src/expcos.c");
-	emit_file("../src/expsin.c");
-	emit_file("../src/factor.c");
-	emit_file("../src/factorial.c");
-	emit_file("../src/factorpoly.c");
-	emit_file("../src/factors.c");
-	emit_file("../src/filter.c");
-	emit_file("../src/float.c");
-	emit_file("../src/floor.c");
-	emit_file("../src/for.c");
-	emit_file("../src/gcd.c");
-	emit_file("../src/guess.c");
-	emit_file("../src/hermite.c");
-	emit_file("../src/hilbert.c");
-	emit_file("../src/imag.c");
-	emit_file("../src/index.c");
-	emit_file("../src/inner.c");
-	emit_file("../src/integral.c");
-	emit_file("../src/inv.c");
-	emit_file("../src/is.c");
-	emit_file("../src/isprime.c");
-	emit_file("../src/itab.c");
-	emit_file("../src/laguerre.c");
-	emit_file("../src/lcm.c");
-	emit_file("../src/leading.c");
-	emit_file("../src/legendre.c");
-	emit_file("../src/log.c");
-	emit_file("../src/mag.c");
-	emit_file("../src/mod.c");
-	emit_file("../src/multiply.c");
-	emit_file("../src/nroots.c");
-	emit_file("../src/numerator.c");
-	emit_file("../src/outer.c");
-	emit_file("../src/partition.c");
-	emit_file("../src/polar.c");
-	emit_file("../src/pollard.c");
-	emit_file("../src/power.c");
-	emit_file("../src/prime.c");
-	emit_file("../src/primetab.c");
-	emit_file("../src/print.c");
-	emit_file("../src/product.c");
-	emit_file("../src/quotient.c");
-	emit_file("../src/rationalize.c");
-	emit_file("../src/real.c");
-	emit_file("../src/rect.c");
-	emit_file("../src/roots.c");
-	emit_file("../src/setq.c");
-	emit_file("../src/sgn.c");
-	emit_file("../src/simfac.c");
-	emit_file("../src/simplify.c");
-	emit_file("../src/sin.c");
-	emit_file("../src/sinh.c");
-	emit_file("../src/sum.c");
-	emit_file("../src/tan.c");
-	emit_file("../src/tanh.c");
-	emit_file("../src/taylor.c");
-	emit_file("../src/tensor.c");
-	emit_file("../src/test.c");
-	emit_file("../src/transform.c");
-	emit_file("../src/transpose.c");
-	emit_file("../src/userfunc.c");
-	emit_file("../src/zero.c");
-
-	emit_file("../src/core.c");
-	emit_file("../src/symbol.c");
-	emit_file("../src/stack.c");
-	emit_file("../src/bignum.c");
-
+	emit_file(PATH "defs1.h");
+	emit_file(PATH "prototypes.h");
+	emit_file(PATH "globals.c");
+	n = scandir(PATH, &p, filter, alphasort);
+	for (i = 0; i < n; i++) {
+		if (strcmp(p[i]->d_name, "globals.c") == 0)
+			continue;
+		strcpy(filename, PATH);
+		strcat(filename, p[i]->d_name);
+		emit_file(filename);
+	}
 	return 0;
+}
+
+int
+filter(const struct dirent *p)
+{
+	int len = strlen(p->d_name);
+
+	if (len > 2 && strcmp(p->d_name + len - 2, ".c") == 0)
+		return 1;
+	else
+		return 0;
 }
 
 void
