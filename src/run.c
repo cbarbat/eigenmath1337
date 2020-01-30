@@ -234,7 +234,6 @@ trace_error(void)
 void
 eval_run(void)
 {
-
 	push(cadr(p1));
 	eval();
 	p1 = pop();
@@ -262,7 +261,7 @@ run_file(char *filename)
 
 	n = (int) lseek(fd, 0, SEEK_END);
 
-	if (n == -1) {
+	if (n < 0) {
 		close(fd);
 		stop("lseek error");
 	}
