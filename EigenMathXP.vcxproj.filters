@@ -92,9 +92,6 @@
     <ClCompile Include="src\setq.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\selftest.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\scan.c">
       <Filter>Source Files</Filter>
     </ClCompile>

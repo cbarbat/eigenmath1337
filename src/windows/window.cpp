@@ -138,6 +138,7 @@ printstr(char *s)
 		printchar(*s++);
 }
 
+extern "C"
 void
 clear_term(void)
 {

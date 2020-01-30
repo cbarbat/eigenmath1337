@@ -223,7 +223,6 @@
     <ClCompile Include="src\roots.c" />
     <ClCompile Include="src\run.c" />
     <ClCompile Include="src\scan.c" />
-    <ClCompile Include="src\selftest.c" />
     <ClCompile Include="src\setq.c" />
     <ClCompile Include="src\sgn.c" />
     <ClCompile Include="src\simfac.c" />
