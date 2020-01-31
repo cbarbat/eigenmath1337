@@ -243,16 +243,24 @@ led_rel(void)
 void
 led_add(void)
 {
+	int h = tos - 1;
+
 	// left is on stack
+	// put right on stack
+	while (ptoken == '+' || ptoken == '-') 
+	{
+		if (ptoken == '+') {
+			pratt(30);
+		}
+		else if (ptoken == '-') {
+			pratt(30);
+			static_negate();
+		}
+	}
+	list(tos - h);
 	push_symbol(ADD);
 	swap();
-	if (ptoken == '+') {
-		pratt(30);
-	} else if (ptoken == '-') {
-		pratt(30);
-		static_negate();
-	}
-	list(3);
+	cons();
 }
 
 void
@@ -261,6 +269,7 @@ led_mul(void)
 	int h = tos - 1;
 
 	// left is on stack
+	level_factors(tos - 1);
 	// put right on stack
 	if (ptoken != '/')
 		pratt(MUL_BP);
@@ -268,15 +277,11 @@ led_mul(void)
 		pratt(MUL_BP);
 		static_reciprocate();
 	}
-
-	if (h == tos)
-		push_integer(1);
-	else if (tos - h > 1) {
-		list(tos - h);
-		push_symbol(MULTIPLY);
-		swap();
-		cons();
-	}
+	level_factors(tos - 1);
+	list(tos - h);
+	push_symbol(MULTIPLY);
+	swap();
+	cons();
 }
 
 void
