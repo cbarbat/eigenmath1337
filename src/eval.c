@@ -202,6 +202,7 @@ eval_cons(void)
 	case OUTER:		eval_outer();		break;
 	case POLAR:		eval_polar();		break;
 	case POWER:		eval_power();		break;
+	case PRATT:		eval_pratt();		break;
 	case PRIME:		eval_prime();		break;
 	case PRINT:		eval_print();		break;
 	case PRODUCT:		eval_product();		break;
@@ -335,6 +336,19 @@ eval_number(void)
 		push_integer(1);
 	else
 		push_integer(0);
+}
+
+void
+eval_pratt(void)
+{
+	push(cadr(p1));
+	eval();
+	p1 = pop();
+	if (iszero(p1))
+		pratt_flag = 0;
+	else if (isplusone(p1))
+		pratt_flag = 1;
+	push_symbol(NIL); // no result is printed
 }
 
 void

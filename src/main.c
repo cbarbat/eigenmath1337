@@ -9,12 +9,12 @@ main(int argc, char *argv[])
 
 	if (argc > 1)
 		run_script(argv[1]);
-
-	for (;;) {
-		printf("? ");
-		fgets(buf, sizeof buf, stdin);
-		run(buf);
-	}
+	else
+		for (;;) {
+			printf("? ");
+			fgets(buf, sizeof buf, stdin);
+			run(buf);
+		}
 
 	return 0;
 }

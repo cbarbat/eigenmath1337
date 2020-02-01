@@ -63,7 +63,7 @@ transform(char **s)
 
 	while (*s) {
 
-		if (equaln(get_binding(symbol(PRATT)), 1)) {
+		if (pratt_flag) {
 			scan_with_pratt(*s, 1);
 		} else {
 			scan(*s, 1);

@@ -29,7 +29,7 @@
 int token;
 int scan_mode;
 int scan_level;
-int pptoken, ptoken, ppnewline_flag, pnewline_flag, newline_flag;
+int pptoken, ptoken, ppnewline_flag, pnewline_flag, newline_flag, newline_at_top_level;
 
 char *scan_str;
 char *token_str;
@@ -263,21 +263,50 @@ led_add(void)
 	cons();
 }
 
+int
+factor_pending(void)
+{
+	switch (token) {
+	case '+': // sign
+	case '-': // sign
+	case '(':
+	case T_SYMBOL:
+	case T_FUNCTION:
+	case T_INTEGER:
+	case T_DOUBLE:
+	case T_STRING:
+		return 1;
+	default:
+		break;
+	}
+	return 0;
+}
+
 void
 led_mul(void)
 {
 	int h = tos - 1;
 
 	// left is on stack
-	level_factors(tos - 1);
 	// put right on stack
-	if (ptoken != '/')
-		pratt(MUL_BP);
-	else if (ptoken == '/') {
-		pratt(MUL_BP);
-		static_reciprocate();
+	while (factor_pending()) 
+	{
+		newline_at_top_level = (newline_flag == 1 && scan_level == 0);
+		if (ptoken == '/')
+		{
+			pratt(MUL_BP);
+			static_reciprocate();
+		} 
+		else if (ptoken == '*')
+		{
+			pratt(MUL_BP);
+		}
+		else if (!newline_at_top_level && token != '+' && token != '-')
+		{ 
+			pratt(MUL_BP);
+		}
+		else break;
 	}
-	level_factors(tos - 1);
 	list(tos - h);
 	push_symbol(MULTIPLY);
 	swap();
@@ -388,7 +417,7 @@ pratt(int rbp)
 {
 	// rbp = right binding power
 
-	int nbp, lbp, newline_at_top_level, token_has_nud, token_has_led;
+	int nbp, lbp, token_has_nud, token_has_led;
 	denotation nud, led;
 
 	nbp = MAX_BP;

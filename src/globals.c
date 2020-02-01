@@ -38,6 +38,7 @@ int stop_flag;
 int draw_flag;
 int term_flag;
 int clear_flag;
+int pratt_flag = 0;
 
 jmp_buf stop_return;
 jmp_buf draw_stop_return;

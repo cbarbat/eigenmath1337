@@ -883,7 +883,6 @@ static char *specname[] = {
 	"div",
 	"last",
 	"nil",
-	"pratt",
 	"trace",
 	"tty",
 };

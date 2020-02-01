@@ -41,6 +41,7 @@ extern int stop_flag;
 extern int draw_flag;
 extern int term_flag;
 extern int clear_flag;
+extern int pratt_flag;
 
 extern jmp_buf stop_return;
 extern jmp_buf draw_stop_return;

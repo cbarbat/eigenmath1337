@@ -21,7 +21,7 @@ run(char *s)
 		else
 			expanding = 1;
 
-		if (equaln(get_binding(symbol(PRATT)), 1)) {
+		if (pratt_flag) {
 			s = scan_with_pratt(s, 0);
 		} else {
 			s = scan(s, 0);
@@ -80,7 +80,6 @@ stop(char *s)
 }
 
 char *init_script[] = {
-	"pratt=1",
 	"e=exp(1)",
 	"i=sqrt(-1)",
 	"autoexpand=1",
@@ -120,18 +119,10 @@ clear(void)
 	list(3);
 	imaginaryunit = pop();
 
-	// pratt = 1
-	push_symbol(SETQ);
-	push_symbol(PRATT);
-	push_integer(1);
-	list(3);
-	eval();
-	pop();
-
 	n = sizeof init_script / sizeof (char *);
 
 	for (i = 0; i < n; i++) {
-		if (equaln(get_binding(symbol(PRATT)), 1)) {
+		if (pratt_flag) {
 			scan_with_pratt(init_script[i], 0);
 		} else {
 			scan(init_script[i], 0);

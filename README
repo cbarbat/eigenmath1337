@@ -21,11 +21,12 @@ with the newest Eigenmath code from George Weigt.
 
 I added a Pratt parser to this code base.
 
-To use the recursive descent parser instead, you
-need to set a variable at the Eigenmath prompt:
+To use the Pratt parser, issue this command at the
+Eigenmath prompt:
 
-	pratt = 0
+	pratt(1)
 
-To switch back to the Pratt parser:
+To switch back to the recursive descent parser instead:
 
-	pratt = 1
+	pratt(0)
+
