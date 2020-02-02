@@ -245,9 +245,6 @@
     <ClCompile Include="src\exp.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\eval.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\erfc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -378,6 +375,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\windows\window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\windows\eval_gui.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
