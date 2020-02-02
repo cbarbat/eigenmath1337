@@ -248,7 +248,7 @@ led_add(void)
 
 	// left is on stack
 	// put right on stack
-	while (ptoken == '+' || ptoken == '-') 
+	while (ptoken == '+' || ptoken == '-')
 	{
 		if (ptoken == '+') {
 			pratt(30);
@@ -265,11 +265,11 @@ led_add(void)
 }
 
 int
-factor_pending(void)
-{
+factor_pending(void) {
 	switch (token) {
 	case '*':
 	case '/':
+		get_token_skip_newlines2();
 	case '(':
 	case T_SYMBOL:
 	case T_FUNCTION:
@@ -290,22 +290,20 @@ led_mul(void)
 
 	// left is on stack
 	// put right on stack
-	while (factor_pending()) 
+	while (factor_pending())
 	{
-		if (token == '*' || token == '/')
-			get_token_skip_newlines2();
 		newline_at_top_level = (newline_flag == 1 && scan_level == 0);
 		if (ptoken == '/')
 		{
 			pratt(MUL_BP);
 			static_reciprocate();
-		} 
+		}
 		else if (ptoken == '*')
 		{
 			pratt(MUL_BP);
 		}
 		else if (!newline_at_top_level)
-		{ 
+		{
 			pratt(MUL_BP);
 		}
 		else break;
@@ -600,109 +598,3 @@ scan_error2(char *errmsg)
 	printchar('\n');
 	stop(NULL);
 }
-
-/*
-// There are n = tos - h expressions on the stack, possibly tensors.
-// This function assembles the stack expressions into a single tensor.
-// For example, at the top level of the expression ((a,b),(c,d)), the vectors
-// (a,b) and (c,d) would be on the stack.
-
-// h = tos - n
-void
-build_tensor(int h)
-{
-	int i, n = tos - h;
-	struct atom **s = stack + h;
-
-	save();
-
-	p2 = alloc_tensor(n);
-	p2->u.tensor->ndim = 1;
-	p2->u.tensor->dim[0] = n;
-	for (i = 0; i < n; i++)
-		p2->u.tensor->elem[i] = s[i];
-
-	tos = h;
-
-	push(p2);
-
-	restore();
-}
-
-void
-static_negate(void)
-{
-	save();
-	static_negate_nib();
-	restore();
-}
-
-void
-static_negate_nib(void)
-{
-	p1 = pop();
-
-	if (isnum(p1)) {
-		push(p1);
-		negate();
-		return;
-	}
-
-	if (car(p1) == symbol(MULTIPLY)) {
-		push_symbol(MULTIPLY);
-		if (isnum(cadr(p1))) {
-			push(cadr(p1));
-			negate();	// number
-			push(cddr(p1));	// factors
-		} else {
-			push(minusone);	// number
-			push(cdr(p1));	// factors
-		}
-		cons(); // after cons, the list (number factors) is on the stack
-		cons(); // after cons, the list (MULTIPLY number factors) is on the stack
-		return;
-	}
-
-	push_symbol(MULTIPLY);
-	push_integer(-1);
-	push(p1);
-	list(3);
-}
-
-void
-static_reciprocate(void)
-{
-	save();
-	static_reciprocate_nib();
-	restore();
-}
-
-void
-static_reciprocate_nib(void)
-{
-	p2 = pop();
-	p1 = pop();
-
-	if (isnum(p1) && isnum(p2)) {
-		push(p1);
-		push(p2);
-		divide();
-		return;
-	}
-
-	push(p1);
-
-	p1 = p2;
-
-	if (isnum(p1)) {
-		push(p1);
-		reciprocate();
-		return;
-	}
-
-	push_symbol(POWER);
-	push(p1);
-	push_integer(-1);
-	list(3);
-}
-*/

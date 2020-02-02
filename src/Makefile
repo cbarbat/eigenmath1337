@@ -1,4 +1,4 @@
-CFLAGS = -Wall -O0
+CFLAGS = -Wall -O0 -g
 CC = gcc
 
 objects = \
