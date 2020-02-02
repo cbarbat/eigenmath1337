@@ -51,8 +51,8 @@ struct token_info { // stores information about a token
 };
 
 // lbp and nbp are not used for nuds!
-#define MAX_SYM 22
-struct token_info sym_table[MAX_SYM] = { // stores the nuds and leds
+#define MAX_SYM 19
+struct token_info sym_table[MAX_SYM + 1] = { // stores the nuds and leds
 	// token   , lbp   , nbp       , nud      , led
 	{T_INTEGER , MIN_BP, MIN_BP    , &nud_atom, &led_err}, // nilfix
 	{T_DOUBLE  , MIN_BP, MIN_BP    , &nud_atom, &led_err}, // nilfix
@@ -72,7 +72,8 @@ struct token_info sym_table[MAX_SYM] = { // stores the nuds and leds
 	{'/'       , MUL_BP, MUL_BP + 1, &nud_err , &led_mul}, // div, infixL rbp 40
 	{'^'       , 50    , 51        , &nud_err , &led_pow}, // pow, infixR rbp 49
 	{'!'       , 60    , 61        , &nud_err , &led_fac}, // suffix
-	{'['       , 80    , 81        , &nud_err , &led_arr}  // array access infixL
+	{'['       , 80    , 81        , &nud_err , &led_arr}, // array access infixL
+	{T_END     , MIN_BP, MIN_BP    , &nud_err , &led_err}  // dummy
 };
 
 char *
@@ -267,8 +268,8 @@ int
 factor_pending(void)
 {
 	switch (token) {
-	case '+': // sign
-	case '-': // sign
+	case '*':
+	case '/':
 	case '(':
 	case T_SYMBOL:
 	case T_FUNCTION:
@@ -291,6 +292,8 @@ led_mul(void)
 	// put right on stack
 	while (factor_pending()) 
 	{
+		if (token == '*' || token == '/')
+			get_token_skip_newlines2();
 		newline_at_top_level = (newline_flag == 1 && scan_level == 0);
 		if (ptoken == '/')
 		{
@@ -301,16 +304,21 @@ led_mul(void)
 		{
 			pratt(MUL_BP);
 		}
-		else if (!newline_at_top_level && token != '+' && token != '-')
+		else if (!newline_at_top_level)
 		{ 
 			pratt(MUL_BP);
 		}
 		else break;
 	}
-	list(tos - h);
-	push_symbol(MULTIPLY);
-	swap();
-	cons();
+	if (tos - h > 0)
+	{
+		list(tos - h);
+		push_symbol(MULTIPLY);
+		swap();
+		cons();
+	}
+	else
+		scan_error2("expected operand");
 }
 
 void
@@ -364,48 +372,6 @@ find_token(int token) {
 	return i;
 }
 
-int
-has_nud(int i) {
-	return (i < MAX_SYM && sym_table[i].nud != &nud_err);
-}
-
-int
-has_led(int i) {
-	return (i < MAX_SYM && sym_table[i].led != &led_err);
-}
-
-int
-get_led_lbp(int i) {
-	if (i < MAX_SYM)
-		return sym_table[i].lbp;
-	else
-		return MIN_BP;
-}
-
-int
-get_led_nbp(int i) {
-	if (i < MAX_SYM)
-		return sym_table[i].nbp;
-	else
-		return MIN_BP;
-}
-
-denotation
-get_nud(int i) {
-	if (i < MAX_SYM)
-		return sym_table[i].nud;
-	else
-		return &nud_err;
-}
-
-denotation
-get_led(int i) {
-	if (i < MAX_SYM)
-		return sym_table[i].led;
-	else
-		return &led_err;
-}
-
 void
 pratt(int rbp)
 {
@@ -416,13 +382,13 @@ pratt(int rbp)
 
 	nbp = MAX_BP;
 	i = find_token(token);
-	token_has_nud = has_nud(i);
-	nud = get_nud(i);
+	token_has_nud = (sym_table[i].nud != &nud_err);
+	nud = sym_table[i].nud;
 	if (!token_has_nud) {
 		scan_error2("expected operand");
 	}
 	if (token == '+' || token == '-') {
-		if (ptoken == '+' || ptoken == '-')
+		if (ptoken == '+' || ptoken == '-' || ptoken == '*' || ptoken == '/' || ptoken == '^')
 			scan_error2("expected operand");
 		else
 			get_token_skip_newlines2(); // skip after + or - sign
@@ -431,10 +397,10 @@ pratt(int rbp)
 	nud();
 	while (1) {
 		i = find_token(token);
-		token_has_nud = has_nud(i);
-		token_has_led = has_led(i);
+		token_has_nud = (sym_table[i].nud != &nud_err);
+		token_has_led = (sym_table[i].led != &led_err);
 		if (token_has_led) {
-			lbp = get_led_lbp(i);
+			lbp = sym_table[i].lbp;
 		} else if (token_has_nud) {
 			lbp = MUL_BP; // implicit multiplication
 		} else {
@@ -444,8 +410,8 @@ pratt(int rbp)
 			break;
 		newline_at_top_level = (newline_flag == 1 && scan_level == 0);
 		if ((!newline_at_top_level || !token_has_nud) && token_has_led) {
-			nbp = get_led_nbp(i);
-			led = get_led(i);
+			nbp = sym_table[i].nbp;
+			led = sym_table[i].led;
 			get_token_skip_newlines2(); // after binary operator
 			led();
 		} else if (!newline_at_top_level && token_has_nud && !token_has_led) {
