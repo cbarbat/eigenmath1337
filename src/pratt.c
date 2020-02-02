@@ -54,25 +54,25 @@ struct token_info { // stores information about a token
 #define MAX_SYM 22
 struct token_info sym_table[MAX_SYM] = { // stores the nuds and leds
 	// token   , lbp   , nbp       , nud      , led
-	{T_INTEGER , MIN_BP, MIN_BP    , &nud_atom, NULL    }, // nilfix
-	{T_DOUBLE  , MIN_BP, MIN_BP    , &nud_atom, NULL    }, // nilfix
-	{T_STRING  , MIN_BP, MIN_BP    , &nud_atom, NULL    }, // nilfix
-	{T_SYMBOL  , MIN_BP, MIN_BP    , &nud_atom, NULL    }, // nilfix
-	{T_FUNCTION, MIN_BP, MIN_BP    , &nud_func, NULL    }, // nilfix
-	{'('       , MIN_BP, MIN_BP    , &nud_tens, NULL    }, // nilfix
-	{'='       , 10    , 10        , NULL     , &led_rel}, // infixN
-	{T_EQ      , 20    , 20        , NULL     , &led_rel}, // infixN
-	{T_GTEQ    , 20    , 20        , NULL     , &led_rel}, // infixN
-	{T_LTEQ    , 20    , 20        , NULL     , &led_rel}, // infixN
-	{'>'       , 20    , 20        , NULL     , &led_rel}, // infixN
-	{'<'       , 20    , 20        , NULL     , &led_rel}, // infixN
+	{T_INTEGER , MIN_BP, MIN_BP    , &nud_atom, &led_err}, // nilfix
+	{T_DOUBLE  , MIN_BP, MIN_BP    , &nud_atom, &led_err}, // nilfix
+	{T_STRING  , MIN_BP, MIN_BP    , &nud_atom, &led_err}, // nilfix
+	{T_SYMBOL  , MIN_BP, MIN_BP    , &nud_atom, &led_err}, // nilfix
+	{T_FUNCTION, MIN_BP, MIN_BP    , &nud_func, &led_err}, // nilfix
+	{'('       , MIN_BP, MIN_BP    , &nud_tens, &led_err}, // nilfix
+	{'='       , 10    , 10        , &nud_err , &led_rel}, // infixN
+	{T_EQ      , 20    , 20        , &nud_err , &led_rel}, // infixN
+	{T_GTEQ    , 20    , 20        , &nud_err , &led_rel}, // infixN
+	{T_LTEQ    , 20    , 20        , &nud_err , &led_rel}, // infixN
+	{'>'       , 20    , 20        , &nud_err , &led_rel}, // infixN
+	{'<'       , 20    , 20        , &nud_err , &led_rel}, // infixN
 	{'+'       , 30    , 31        , &nud_sign, &led_add}, // add, infixL rbp 30
 	{'-'       , 30    , 31        , &nud_sign, &led_add}, // sub, infixL rbp 30
-	{'*'       , MUL_BP, MUL_BP + 1, NULL     , &led_mul}, // mul, infixL rbp 40
-	{'/'       , MUL_BP, MUL_BP + 1, NULL     , &led_mul}, // div, infixL rbp 40
-	{'^'       , 50    , 51        , NULL     , &led_pow}, // pow, infixR rbp 49
-	{'!'       , 60    , 61        , NULL     , &led_fac}, // suffix
-	{'['       , 80    , 81        , NULL     , &led_arr}  // array access infixL
+	{'*'       , MUL_BP, MUL_BP + 1, &nud_err , &led_mul}, // mul, infixL rbp 40
+	{'/'       , MUL_BP, MUL_BP + 1, &nud_err , &led_mul}, // div, infixL rbp 40
+	{'^'       , 50    , 51        , &nud_err , &led_pow}, // pow, infixR rbp 49
+	{'!'       , 60    , 61        , &nud_err , &led_fac}, // suffix
+	{'['       , 80    , 81        , &nud_err , &led_arr}  // array access infixL
 };
 
 char *
@@ -91,14 +91,14 @@ scan_with_pratt(char * s, int mode)
 }
 
 void
-nud_error(void)
+nud_err(void)
 {
 	scan_str = token_str; // better error display
 	scan_error2("syntax error");
 }
 
 void
-led_error(void)
+led_err(void)
 {
 	scan_error2("no led found");
 }
@@ -365,20 +365,17 @@ find_token(int token) {
 }
 
 int
-has_nud(int token) {
-	int i = find_token(token);
-	return (i < MAX_SYM && sym_table[i].nud != NULL);
+has_nud(int i) {
+	return (i < MAX_SYM && sym_table[i].nud != &nud_err);
 }
 
 int
-has_led(int token) {
-	int i = find_token(token);
-	return (i < MAX_SYM && sym_table[i].led != NULL);
+has_led(int i) {
+	return (i < MAX_SYM && sym_table[i].led != &led_err);
 }
 
 int
-get_led_lbp(int token) {
-	int i = find_token(token);
+get_led_lbp(int i) {
 	if (i < MAX_SYM)
 		return sym_table[i].lbp;
 	else
@@ -386,8 +383,7 @@ get_led_lbp(int token) {
 }
 
 int
-get_led_nbp(int token) {
-	int i = find_token(token);
+get_led_nbp(int i) {
 	if (i < MAX_SYM)
 		return sym_table[i].nbp;
 	else
@@ -395,21 +391,19 @@ get_led_nbp(int token) {
 }
 
 denotation
-get_nud(int token) {
-	int i = find_token(token);
-	if (i < MAX_SYM && sym_table[i].nud != NULL)
+get_nud(int i) {
+	if (i < MAX_SYM)
 		return sym_table[i].nud;
 	else
-		return &nud_error;
+		return &nud_err;
 }
 
 denotation
-get_led(int token) {
-	int i = find_token(token);
-	if (i < MAX_SYM && sym_table[i].led != NULL)
+get_led(int i) {
+	if (i < MAX_SYM)
 		return sym_table[i].led;
 	else
-		return &led_error;
+		return &led_err;
 }
 
 void
@@ -417,12 +411,13 @@ pratt(int rbp)
 {
 	// rbp = right binding power
 
-	int nbp, lbp, token_has_nud, token_has_led;
+	int i, nbp, lbp, token_has_nud, token_has_led;
 	denotation nud, led;
 
 	nbp = MAX_BP;
-	token_has_nud = has_nud(token);
-	nud = get_nud(token);
+	i = find_token(token);
+	token_has_nud = has_nud(i);
+	nud = get_nud(i);
 	if (!token_has_nud) {
 		scan_error2("expected operand");
 	}
@@ -435,10 +430,11 @@ pratt(int rbp)
 		get_token2();
 	nud();
 	while (1) {
-		token_has_nud = has_nud(token);
-		token_has_led = has_led(token);
+		i = find_token(token);
+		token_has_nud = has_nud(i);
+		token_has_led = has_led(i);
 		if (token_has_led) {
-			lbp = get_led_lbp(token);
+			lbp = get_led_lbp(i);
 		} else if (token_has_nud) {
 			lbp = MUL_BP; // implicit multiplication
 		} else {
@@ -448,8 +444,8 @@ pratt(int rbp)
 			break;
 		newline_at_top_level = (newline_flag == 1 && scan_level == 0);
 		if ((!newline_at_top_level || !token_has_nud) && token_has_led) {
-			nbp = get_led_nbp(token);
-			led = get_led(token);
+			nbp = get_led_nbp(i);
+			led = get_led(i);
 			get_token_skip_newlines2(); // after binary operator
 			led();
 		} else if (!newline_at_top_level && token_has_nud && !token_has_led) {

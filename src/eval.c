@@ -348,7 +348,7 @@ eval_pratt(void)
 		pratt_flag = 0;
 	else if (isplusone(p1))
 		pratt_flag = 1;
-	push_symbol(NIL); // no result is printed
+	push_integer(pratt_flag);
 }
 
 void
