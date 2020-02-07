@@ -1,6 +1,11 @@
 a.out
 eigenmath.c
 
+EigenMathXP_Win32
+EigenMathXP_x64
+EigenMathConsole_Win32
+EigenMathConsole_x64
+
 # Prerequisites
 *.d
 

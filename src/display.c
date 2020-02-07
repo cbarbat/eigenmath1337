@@ -1159,3 +1159,4 @@ emit_tensor_inner(struct atom *p, int j, int *k)
 	}
 	emit_char(')');
 }
+

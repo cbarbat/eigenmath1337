@@ -53,3 +53,7 @@ extern int max_stack;
 extern int max_frame;
  
 extern char tbuf[100];
+
+extern char *outbuf;
+extern int outbuf_index;
+extern int outbuf_length;
