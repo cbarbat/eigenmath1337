@@ -427,6 +427,7 @@ void eval_mag(void);
 void mag(void);
 void mag_nib(void);
 int main(int argc, char *argv[]);
+void eval_stdin(void);
 void run_infile(void);
 void printbuf(char *s, int color);
 void ffputs(char *s);
