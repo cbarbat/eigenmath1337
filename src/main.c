@@ -1,7 +1,5 @@
 #include "defs.h"
 
-int html_flag;
-int latex_flag;
 char *infile;
 
 int
@@ -30,8 +28,15 @@ main(int argc, char *argv[])
 		run_infile();
 	else {
 		for (;;) {
-			printf("? ");
+			if (html_flag)
+				printf("<!--? ");
+			else if (latex_flag)
+				printf("%%? ");
+			else
+				printf("? ");
 			fgets(buf, sizeof buf, stdin);
+			if (html_flag)
+				printf("-->\n");
 			run(buf);
 		}
 	}
@@ -154,7 +159,7 @@ cmdisplay(void)
 {
 	if (html_flag) {
 		ffputs("<p>\n");
-		mml();
+		mathml();
 		ffputs(outbuf);
 		ffputs("\n\n");
 	} else if (latex_flag) {
@@ -164,3 +169,4 @@ cmdisplay(void)
 	} else
 		display();
 }
+

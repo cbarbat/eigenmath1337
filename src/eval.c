@@ -154,6 +154,7 @@ eval_cons(void)
 	case ERF:		eval_erf();		break;
 	case ERFC:		eval_erfc();		break;
 	case EVAL:		eval_eval();		break;
+	case EXIT:		eval_exit();		break;
 	case EXP:		eval_exp();		break;
 	case EXPAND:		eval_expand();		break;
 	case EXPCOS:		eval_expcos();		break;
@@ -318,6 +319,17 @@ eval_eval(void)
 		p1 = cddr(p1);
 	}
 	eval();
+}
+
+void
+eval_exit(void)
+{
+	if (html_flag)
+		printf("</body></html>\n");
+	else if (latex_flag)
+		end_document();
+
+	exit(0);
 }
 
 void
