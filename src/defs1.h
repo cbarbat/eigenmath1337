@@ -157,6 +157,7 @@ enum {
 	INV,
 	ISPRIME,
 	LAGUERRE,
+	LATEX,
 	LCM,
 	LEADING,
 	LEGENDRE,
@@ -174,6 +175,7 @@ enum {
 	OUTER,
 	POLAR,
 	POWER,
+	PRATT,
 	PRIME,
 	PRINT,
 	PRODUCT,
@@ -224,7 +226,6 @@ enum {
 
 	AUTOEXPAND,
 	LAST,
-	PRATT,
 	TRACE,
 	TTY,
 

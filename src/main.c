@@ -1,34 +1,59 @@
 #include "defs.h"
 
+int html_flag;
+int latex_flag;
+char *infile;
+
 int
 main(int argc, char *argv[])
 {
+	int i;
 	static char buf[1000];
+
+	for (i = 1; i < argc; i++) {
+		if (strcmp(argv[i], "--html") == 0)
+			html_flag = 1;
+		else if (strcmp(argv[i], "--latex") == 0)
+			latex_flag = 1;
+		else
+			infile = argv[i];
+	}
 
 	clear();
 
-	if (argc > 1)
-		run_script(argv[1]);
-	else
+	if (html_flag)
+		printf("<html><head></head><body style='font-size:20pt'>\n\n");
+	else if (latex_flag)
+		begin_document();
+
+	if (infile)
+		run_infile();
+	else {
 		for (;;) {
 			printf("? ");
 			fgets(buf, sizeof buf, stdin);
 			run(buf);
 		}
+	}
+
+	if (html_flag)
+		printf("</body></html>\n");
+	else if (latex_flag)
+		end_document();
 
 	return 0;
 }
 
 void
-run_script(char *filename)
+run_infile(void)
 {
 	int fd, n;
 	char *buf;
 
-	fd = open(filename, O_RDONLY, 0);
+	fd = open(infile, O_RDONLY, 0);
 
 	if (fd == -1) {
-		printf("cannot open %s\n", filename);
+		printf("cannot open %s\n", infile);
 		exit(1);
 	}
 
@@ -61,13 +86,59 @@ run_script(char *filename)
 }
 
 void
-printstr(char *s)
+printbuf(char *s, int color)
+{
+	if (html_flag) {
+
+		switch (color) {
+		case BLACK:
+			ffputs("<p style='color:black;font-family:courier'>\n");
+			break;
+		case BLUE:
+			ffputs("<p style='color:blue;font-family:courier'>\n");
+			break;
+		case RED:
+			ffputs("<p style='color:red;font-family:courier'>\n");
+			break;
+		default:
+			ffputs("<p style='font-family:courier'>\n");
+			break;
+		}
+
+		while (*s) {
+			if (*s == '\n')
+				ffputs("<br>\n");
+			else if (*s == '&')
+				ffputs("&amp;");
+			else if (*s == '<')
+				ffputs("&lt;");
+			else if (*s == '>')
+				ffputs("&gt;");
+			else
+				ffputc(*s);
+			s++;
+		}
+
+		ffputc('\n');
+
+	} else if (latex_flag) {
+
+		ffputs("\\begin{verbatim}\n");
+		ffputs(s);
+		ffputs("\\end{verbatim}\n\n");
+
+	} else
+		ffputs(s);
+}
+
+void
+ffputs(char *s)
 {
 	fputs(s, stdout);
 }
 
 void
-printchar(int c)
+ffputc(int c)
 {
 	fputc(c, stdout);
 }
@@ -81,5 +152,15 @@ eval_draw(void)
 void
 cmdisplay(void)
 {
-	display();
+	if (html_flag) {
+		ffputs("<p>\n");
+		mml();
+		ffputs(outbuf);
+		ffputs("\n\n");
+	} else if (latex_flag) {
+		latex();
+		ffputs(outbuf);
+		ffputs("\n\n");
+	} else
+		display();
 }

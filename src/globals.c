@@ -36,7 +36,6 @@ int expanding;
 
 int stop_flag;
 int draw_flag;
-int term_flag;
 int clear_flag;
 int pratt_flag = 0;
 
@@ -54,4 +53,3 @@ char tbuf[100];
 char *outbuf;
 int outbuf_index;
 int outbuf_length;
-

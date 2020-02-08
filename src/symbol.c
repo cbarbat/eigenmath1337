@@ -189,6 +189,7 @@ init_symbol_table(void)
 	std_symbol("inv", INV);
 	std_symbol("isprime", ISPRIME);
 	std_symbol("laguerre", LAGUERRE);
+	std_symbol("latex", LATEX);
 	std_symbol("lcm", LCM);
 	std_symbol("leading", LEADING);
 	std_symbol("legendre", LEGENDRE);
@@ -206,6 +207,7 @@ init_symbol_table(void)
 	std_symbol("outer", OUTER);
 	std_symbol("polar", POLAR);
 	std_symbol("^", POWER);
+	std_symbol("pratt", PRATT);
 	std_symbol("prime", PRIME);
 	std_symbol("print", PRINT);
 	std_symbol("product", PRODUCT);
@@ -256,7 +258,6 @@ init_symbol_table(void)
 
 	std_symbol("autoexpand", AUTOEXPAND);
 	std_symbol("last", LAST);
-	std_symbol("pratt", PRATT);
 	std_symbol("trace", TRACE);
 	std_symbol("tty", TTY);
 

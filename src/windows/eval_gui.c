@@ -24,14 +24,6 @@ eval_and_print_result_nib(int update)
 	if (update)
 		binding[LAST] = p2;
 
-	// print string result in small font
-
-	if (isstr(p2)) {
-		printstr(p2->u.str);
-		printstr("\n");
-		return;
-	}
-
 	if (issymbol(p1) && !iskeyword(p1) && p1 != p2) // keyword like "float"
 		prep_symbol_equals();
 
@@ -186,12 +178,14 @@ eval_cons(void)
 	case INV:		eval_inv();		break;
 	case ISPRIME:		eval_isprime();		break;
 	case LAGUERRE:		eval_laguerre();	break;
+	case LATEX:		eval_latex();		break;
 	case LCM:		eval_lcm();		break;
 	case LEADING:		eval_leading();		break;
 	case LEGENDRE:		eval_legendre();	break;
 	case LISP:		eval_lisp();		break;
 	case LOG:		eval_log();		break;
 	case MAG:		eval_mag();		break;
+	case MATHML:		eval_mathml();		break;
 	case MOD:		eval_mod();		break;
 	case MULTIPLY:		eval_multiply();	break;
 	case NOT:		eval_not();		break;
