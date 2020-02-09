@@ -37,8 +37,6 @@ extern struct atom *imaginaryunit;
 extern int expanding;
 extern int running;
  
-extern int html_flag;
-extern int latex_flag;
 extern int stop_flag;
 extern int draw_flag;
 extern int term_flag;

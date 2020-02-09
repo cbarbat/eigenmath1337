@@ -322,17 +322,6 @@ eval_eval(void)
 }
 
 void
-eval_exit(void)
-{
-	if (html_flag)
-		printf("</body></html>\n");
-	else if (latex_flag)
-		end_document();
-
-	exit(0);
-}
-
-void
 eval_number(void)
 {
 	push(cadr(p1));

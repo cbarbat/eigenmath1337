@@ -1,5 +1,7 @@
 #include "defs.h"
 
+int html_flag;
+int latex_flag;
 char *infile;
 char inbuf[1000];
 
@@ -177,3 +179,13 @@ cmdisplay(void)
 		display();
 }
 
+void
+eval_exit(void)
+{
+	if (html_flag)
+		printf("</body></html>\n");
+	else if (latex_flag)
+		end_document();
+
+	exit(0);
+}

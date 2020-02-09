@@ -34,8 +34,6 @@ struct atom *imaginaryunit;
 
 int expanding;
 
-int html_flag;
-int latex_flag;
 int stop_flag;
 int draw_flag;
 int clear_flag;
