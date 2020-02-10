@@ -71,7 +71,7 @@ void
 printchar_nowrap(int c)
 {
 	if (c == '\n' || len < 80)
-		printchar(c);
+		print_char(c);
 }
 
 static int

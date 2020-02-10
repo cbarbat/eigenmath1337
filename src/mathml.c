@@ -17,17 +17,26 @@ void
 mathml(void)
 {
 	save();
+	mathml_nib();
+	restore();
+}
 
+void
+mathml_nib(void)
+{
 	outbuf_index = 0;
-	print_str("<math><mrow>");
 
 	p1 = pop();
-	mml_expr(p1);
 
-	print_str("</mrow></math>");
+	if (isstr(p1))
+		mml_string(p1, 0);
+	else {
+		print_str("<math><mrow>");
+		mml_expr(p1);
+		print_str("</mrow></math>");
+	}
+
 	print_char('\0');
-
-	restore();
 }
 
 void
@@ -232,7 +241,7 @@ mml_factor(struct atom *p)
 		break;
 
 	case STR:
-		mml_string(p);
+		mml_string(p, 1);
 		break;
 
 	case TENSOR:
@@ -605,7 +614,7 @@ mml_symbol(struct atom *p)
 	s = p->u.printname;
 	n = mml_symbol_scan(s);
 
-	if (strlen(s) == n) {
+	if ((int) strlen(s) == n) {
 		mml_symbol_shipout(s, n);
 		return;
 	}
@@ -643,7 +652,7 @@ mml_symbol_scan(char *s)
 {
 	int i, n;
 	for (i = 0; i < 46; i++) {
-		n = strlen(mml_greek_tab[i]);
+		n = (int) strlen(mml_greek_tab[i]);
 		if (strncmp(s, mml_greek_tab[i], n) == 0)
 			return n;
 	}
@@ -734,11 +743,36 @@ mml_matrix(struct tensor *t, int d, int *k)
 }
 
 void
-mml_string(struct atom *p)
+mml_string(struct atom *p, int mathmode)
 {
-	print_str("<mtext>");
-	print_str(p->u.str);
-	print_str("</mtext>");
+	char *s = p->u.str;
+
+	if (mathmode)
+		print_str("<mtext>&nbsp;");
+
+	while (*s) {
+		switch (*s) {
+		case '\n':
+			print_str("<br>");
+			break;
+		case '&':
+			print_str("&amp;");
+			break;
+		case '<':
+			print_str("&lt;");
+			break;
+		case '>':
+			print_str("&gt;");
+			break;
+		default:
+			print_char(*s);
+			break;
+		}
+		s++;
+	}
+
+	if (mathmode)
+		print_str("</mtext>");
 }
 
 void

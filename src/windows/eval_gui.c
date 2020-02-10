@@ -179,14 +179,12 @@ eval_cons(void)
 	case INV:		eval_inv();		break;
 	case ISPRIME:		eval_isprime();		break;
 	case LAGUERRE:		eval_laguerre();	break;
-	case LATEX:		eval_latex();		break;
 	case LCM:		eval_lcm();		break;
 	case LEADING:		eval_leading();		break;
 	case LEGENDRE:		eval_legendre();	break;
 	case LISP:		eval_lisp();		break;
 	case LOG:		eval_log();		break;
 	case MAG:		eval_mag();		break;
-	case MATHML:		eval_mathml();		break;
 	case MOD:		eval_mod();		break;
 	case MULTIPLY:		eval_multiply();	break;
 	case NOT:		eval_not();		break;

@@ -28,7 +28,6 @@ extern "C" {
 	int stop_flag;
 	void run(char *);
 	void clear(void);
-	void echo_input(char *);
 	void printstr(const char *);
 }
 extern void draw_display(void);
@@ -257,6 +256,30 @@ ACCEL accel[NACCEL] = {
 	{FCONTROL,	22,	ID_PASTE},	// ^V
 	{FCONTROL,	27,	ID_ESC},	// ^[
 };
+
+extern "C" void
+eval_exit(void)
+{
+	PostMessage(
+		main_window,
+		WM_QUIT,
+		0,
+		0);
+}
+
+void
+echo_input(const char *s)
+{
+	printstr(s);
+	printstr("\n");
+}
+
+extern "C" void
+printbuf(char *s, int color)
+{
+	printstr(s);
+}
+
 
 int APIENTRY WinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,

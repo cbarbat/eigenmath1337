@@ -15,17 +15,28 @@ void
 latex(void)
 {
 	save();
+	latex_nib();
+	restore();
+}
 
+void
+latex_nib(void)
+{
 	outbuf_index = 0;
-	print_str("\\begin{equation}\n");
 
 	p1 = pop();
-	latex_expr(p1);
 
-	print_str("\n\\end{equation}");
+	if (isstr(p1)) {
+		print_str("\\begin{verbatim}\n");
+		print_str(p1->u.str);
+		print_str("\n\\end{verbatim}");
+	} else {
+		print_str("\\begin{equation}\n");
+		latex_expr(p1);
+		print_str("\n\\end{equation}");
+	}
+
 	print_char('\0');
-
-	restore();
 }
 
 void
@@ -467,7 +478,7 @@ latex_function(struct atom *p)
 
 	if (car(p) == symbol(TESTGE)) {
 		latex_expr(cadr(p));
-		print_str("\\geq");
+		print_str("\\geq ");
 		latex_expr(caddr(p));
 		return;
 	}
@@ -481,7 +492,7 @@ latex_function(struct atom *p)
 
 	if (car(p) == symbol(TESTLE)) {
 		latex_expr(cadr(p));
-		print_str("\\leq");
+		print_str("\\leq ");
 		latex_expr(caddr(p));
 		return;
 	}
@@ -511,7 +522,7 @@ latex_arglist(struct atom *p)
 	if (iscons(p)) {
 		latex_expr(car(p));
 		p = cdr(p);
-		while(iscons(p)) {
+		while (iscons(p)) {
 			print_str(",");
 			latex_expr(car(p));
 			p = cdr(p);
@@ -548,7 +559,7 @@ latex_symbol(struct atom *p)
 	s = p->u.printname;
 	n = latex_symbol_scan(s);
 
-	if (strlen(s) == n) {
+	if ((int) strlen(s) == n) {
 		latex_symbol_shipout(s, n);
 		return;
 	}
@@ -583,7 +594,7 @@ latex_symbol_scan(char *s)
 {
 	int i, n;
 	for (i = 0; i < 46; i++) {
-		n = strlen(latex_greek_tab[i]);
+		n = (int) strlen(latex_greek_tab[i]);
 		if (strncmp(s, latex_greek_tab[i], n) == 0)
 			return n;
 	}
@@ -608,14 +619,6 @@ latex_symbol_shipout(char *s, int n)
 		print_char(*s++);
 
 	print_str(" ");
-}
-
-void
-latex_string(struct atom *p)
-{
-	print_str("\\,\\text{");
-	print_str(p->u.str);
-	print_str("}");
 }
 
 void
@@ -670,28 +673,10 @@ latex_tensor_matrix(struct tensor *t, int d, int *k)
 	print_str("\\end{pmatrix}");
 }
 
-char *begin_document_str =
-"\\documentclass[12pt]{article}\n"
-"\\usepackage{amsmath,amsfonts,amssymb}\n"
-"\% change margins\n"
-"\\addtolength{\\oddsidemargin}{-.875in}\n"
-"\\addtolength{\\evensidemargin}{-.875in}\n"
-"\\addtolength{\\textwidth}{1.75in}\n"
-"\\addtolength{\\topmargin}{-.875in}\n"
-"\\addtolength{\\textheight}{1.75in}\n"
-"\\begin{document}\n\n";
-
-char *end_document_str = "\\end{document}\n";
-
 void
-begin_document(void)
+latex_string(struct atom *p)
 {
-	ffputs(begin_document_str);
+	print_str("\\,\\text{");
+	print_str(p->u.str);
+	print_str("}");
 }
-
-void
-end_document(void)
-{
-	ffputs(end_document_str);
-}
-
