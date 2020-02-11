@@ -188,7 +188,8 @@ print_status(void)
 void
 trace_input(char *s)
 {
-	char c, *t;
+	int c;
+	char *t;
 
 	trace_ptr0 = trace_ptr;
 
@@ -202,14 +203,11 @@ trace_input(char *s)
 	if (iszero(binding[TRACE]))
 		return;
 
-	t = trace_ptr0;
-
-	while (t < trace_ptr && isspace(*t))
-		t++;
-
 	outbuf_index = 0;
 
 	c = 0;
+
+	t = trace_ptr0;
 
 	while (t < trace_ptr) {
 		c = *t++;

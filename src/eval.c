@@ -50,35 +50,25 @@ prep_symbol_equals(void)
 	p2 = pop();
 }
 
-// evaluate tos
-
 void
 eval(void)
 {
+	save();
+
 	if (stop_flag)
 		stop(NULL);
-	save();
+
 	p1 = pop();
-	switch (p1->k) {
-	case CONS:
+
+	if (p1->k == CONS)
 		eval_cons();
-		break;
-	case RATIONAL:
-		push(p1);
-		break;
-	case DOUBLE:
-		push(p1);
-		break;
-	case STR:
-		push(p1);
-		break;
-	case TENSOR:
-		eval_tensor();
-		break;
-	case SYM:
+	else if (p1->k == SYM)
 		eval_sym();
-		break;
-	}
+	else if (p1->k == TENSOR)
+		eval_tensor();
+	else
+		push(p1); // rational, double, or string
+
 	restore();
 }
 
@@ -103,137 +93,145 @@ eval_sym(void)
 		eval();
 }
 
+void (*functab[])(void) = {
+	eval_abs,
+	eval_add,
+	eval_adj,
+	eval_and,
+	eval_arccos,
+	eval_arccosh,
+	eval_arcsin,
+	eval_arcsinh,
+	eval_arctan,
+	eval_arctanh,
+	eval_arg,
+	eval_atomize,
+	eval_besselj,
+	eval_bessely,
+	eval_binding,
+	eval_binomial,
+	eval_ceiling,
+	eval_check,
+	eval_choose,
+	eval_circexp,
+	eval_clear,
+	eval_clock,
+	eval_coeff,
+	eval_cofactor,
+	eval_conj,
+	eval_contract,
+	eval_cos,
+	eval_cosh,
+	eval_defint,
+	eval_degree,
+	eval_denominator,
+	eval_derivative,
+	eval_det,
+	eval_dim,
+	eval_divisors,
+	eval_do,
+	eval_dot,
+	eval_draw,
+	eval_eigen,
+	eval_eigenval,
+	eval_eigenvec,
+	eval_erf,
+	eval_erfc,
+	eval_eval,
+	eval_exit,
+	eval_exp,
+	eval_expand,
+	eval_expcos,
+	eval_expcosh,
+	eval_expsin,
+	eval_expsinh,
+	eval_exptan,
+	eval_exptanh,
+	eval_factor,
+	eval_factorial,
+	eval_filter,
+	eval_float,
+	eval_floor,
+	eval_for,
+	eval_gcd,
+	eval_hermite,
+	eval_hilbert,
+	eval_imag,
+	eval_index,
+	eval_inner,
+	eval_integral,
+	eval_inv,
+	eval_isprime,
+	eval_laguerre,
+	eval_latex,
+	eval_lcm,
+	eval_leading,
+	eval_legendre,
+	eval_lisp,
+	eval_log,
+	eval_mag,
+	eval_mathml,
+	eval_mod,
+	eval_multiply,
+	eval_not,
+	eval_nroots,
+	eval_number,
+	eval_numerator,
+	eval_or,
+	eval_outer,
+	eval_polar,
+	eval_power,
+	eval_pratt,
+	eval_prime,
+	eval_print,
+	eval_product,
+	eval_quote,
+	eval_quotient,
+	eval_rank,
+	eval_rationalize,
+	eval_real,
+	eval_rect,
+	eval_roots,
+	eval_run,
+	eval_setq,
+	eval_sgn,
+	eval_simplify,
+	eval_sin,
+	eval_sinh,
+	eval_sqrt,
+	eval_status,
+	eval_stop,
+	eval_string,
+	eval_subst,
+	eval_sum,
+	eval_tan,
+	eval_tanh,
+	eval_taylor,
+	eval_test,
+	eval_testeq,
+	eval_testge,
+	eval_testgt,
+	eval_testle,
+	eval_testlt,
+	eval_transpose,
+	eval_unit,
+	eval_zero,
+};
+
 void
 eval_cons(void)
 {
-	if (!issymbol(car(p1)))
-		stop("cons?");
+	int k;
 
-	switch (symnum(car(p1))) {
-	case ABS:		eval_abs();		break;
-	case ADD:		eval_add();		break;
-	case ADJ:		eval_adj();		break;
-	case AND:		eval_and();		break;
-	case ARCCOS:		eval_arccos();		break;
-	case ARCCOSH:		eval_arccosh();		break;
-	case ARCSIN:		eval_arcsin();		break;
-	case ARCSINH:		eval_arcsinh();		break;
-	case ARCTAN:		eval_arctan();		break;
-	case ARCTANH:		eval_arctanh();		break;
-	case ARG:		eval_arg();		break;
-	case ATOMIZE:		eval_atomize();		break;
-	case BESSELJ:		eval_besselj();		break;
-	case BESSELY:		eval_bessely();		break;
-	case BINDING:		eval_binding();		break;
-	case BINOMIAL:		eval_binomial();	break;
-	case CEILING:		eval_ceiling();		break;
-	case CHECK:		eval_check();		break;
-	case CHOOSE:		eval_choose();		break;
-	case CIRCEXP:		eval_circexp();		break;
-	case CLEAR:		eval_clear();		break;
-	case CLOCK:		eval_clock();		break;
-	case COEFF:		eval_coeff();		break;
-	case COFACTOR:		eval_cofactor();	break;
-	case CONJ:		eval_conj();		break;
-	case CONTRACT:		eval_contract();	break;
-	case COS:		eval_cos();		break;
-	case COSH:		eval_cosh();		break;
-	case DEGREE:		eval_degree();		break;
-	case DEFINT:		eval_defint();		break;
-	case DENOMINATOR:	eval_denominator();	break;
-	case DERIVATIVE:	eval_derivative();	break;
-	case DET:		eval_det();		break;
-	case DIM:		eval_dim();		break;
-	case DIVISORS:		eval_divisors();	break;
-	case DO:		eval_do();		break;
-	case DOT:		eval_inner();		break;
-	case DRAW:		eval_draw();		break;
-	case EIGEN:		eval_eigen();		break;
-	case EIGENVAL:		eval_eigenval();	break;
-	case EIGENVEC:		eval_eigenvec();	break;
-	case ERF:		eval_erf();		break;
-	case ERFC:		eval_erfc();		break;
-	case EVAL:		eval_eval();		break;
-	case EXIT:		eval_exit();		break;
-	case EXP:		eval_exp();		break;
-	case EXPAND:		eval_expand();		break;
-	case EXPCOS:		eval_expcos();		break;
-	case EXPCOSH:		eval_expcosh();		break;
-	case EXPSIN:		eval_expsin();		break;
-	case EXPSINH:		eval_expsinh();		break;
-	case EXPTAN:		eval_exptan();		break;
-	case EXPTANH:		eval_exptanh();		break;
-	case FACTOR:		eval_factor();		break;
-	case FACTORIAL:		eval_factorial();	break;
-	case FILTER:		eval_filter();		break;
-	case FLOATF:		eval_float();		break;
-	case FLOOR:		eval_floor();		break;
-	case FOR:		eval_for();		break;
-	case GCD:		eval_gcd();		break;
-	case HERMITE:		eval_hermite();		break;
-	case HILBERT:		eval_hilbert();		break;
-	case IMAG:		eval_imag();		break;
-	case INDEX:		eval_index();		break;
-	case INNER:		eval_inner();		break;
-	case INTEGRAL:		eval_integral();	break;
-	case INV:		eval_inv();		break;
-	case ISPRIME:		eval_isprime();		break;
-	case LAGUERRE:		eval_laguerre();	break;
-	case LATEX:		eval_latex();		break;
-	case LCM:		eval_lcm();		break;
-	case LEADING:		eval_leading();		break;
-	case LEGENDRE:		eval_legendre();	break;
-	case LISP:		eval_lisp();		break;
-	case LOG:		eval_log();		break;
-	case MAG:		eval_mag();		break;
-	case MATHML:		eval_mathml();		break;
-	case MOD:		eval_mod();		break;
-	case MULTIPLY:		eval_multiply();	break;
-	case NOT:		eval_not();		break;
-	case NROOTS:		eval_nroots();		break;
-	case NUMBER:		eval_number();		break;
-	case NUMERATOR:		eval_numerator();	break;
-	case OR:		eval_or();		break;
-	case OUTER:		eval_outer();		break;
-	case POLAR:		eval_polar();		break;
-	case POWER:		eval_power();		break;
-	case PRATT:		eval_pratt();		break;
-	case PRIME:		eval_prime();		break;
-	case PRINT:		eval_print();		break;
-	case PRODUCT:		eval_product();		break;
-	case QUOTE:		eval_quote();		break;
-	case QUOTIENT:		eval_quotient();	break;
-	case RANK:		eval_rank();		break;
-	case RATIONALIZE:	eval_rationalize();	break;
-	case REAL:		eval_real();		break;
-	case RECTF:		eval_rect();		break;
-	case ROOTS:		eval_roots();		break;
-	case RUN:		eval_run();		break;
-	case SETQ:		eval_setq();		break;
-	case SGN:		eval_sgn();		break;
-	case SIMPLIFY:		eval_simplify();	break;
-	case SIN:		eval_sin();		break;
-	case SINH:		eval_sinh();		break;
-	case SQRT:		eval_sqrt();		break;
-	case STATUS:		eval_status();		break;
-	case STOP:		eval_stop();		break;
-	case STRING:		eval_string();		break;
-	case SUBST:		eval_subst();		break;
-	case SUM:		eval_sum();		break;
-	case TAN:		eval_tan();		break;
-	case TANH:		eval_tanh();		break;
-	case TAYLOR:		eval_taylor();		break;
-	case TEST:		eval_test();		break;
-	case TESTEQ:		eval_testeq();		break;
-	case TESTGE:		eval_testge();		break;
-	case TESTGT:		eval_testgt();		break;
-	case TESTLE:		eval_testle();		break;
-	case TESTLT:		eval_testlt();		break;
-	case TRANSPOSE:		eval_transpose();	break;
-	case UNIT:		eval_unit();		break;
-	case ZERO:		eval_zero();		break;
-	default:		eval_user_function();	break;
-	}
+	if (car(p1)->k != SYM)
+		stop("eval_cons: function name is not a symbol");
+
+	k = symnum(car(p1));
+
+	if (k < MARK1)
+		functab[k]();
+	else
+		eval_user_function();
 }
 
 void

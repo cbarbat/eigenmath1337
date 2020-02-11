@@ -1,7 +1,9 @@
 #include "defs.h"
 
 int html_flag;
+int html_state;
 int latex_flag;
+int latex_state;
 char *infile;
 char inbuf[1000];
 
@@ -21,10 +23,7 @@ main(int argc, char *argv[])
 
 	clear();
 
-	if (html_flag)
-		printf("<html><head></head><body style='font-size:20pt'>\n\n");
-	else if (latex_flag)
-		begin_document();
+	begin_document();
 
 	if (infile == NULL)
 		for (;;)
@@ -32,10 +31,7 @@ main(int argc, char *argv[])
 
 	run_infile();
 
-	if (html_flag)
-		printf("</body></html>\n");
-	else if (latex_flag)
-		end_document();
+	end_document();
 
 	return 0;
 }
@@ -108,17 +104,26 @@ printbuf(char *s, int color)
 	if (html_flag) {
 
 		switch (color) {
+
 		case BLACK:
-			fputs("<p style='color:black;font-family:courier'>\n", stdout);
+			if (html_state != 1) {
+				fputs("<p style='color:black;font-family:courier'>\n", stdout);
+				html_state = 1;
+			}
 			break;
+
 		case BLUE:
-			fputs("<p style='color:blue;font-family:courier'>\n", stdout);
+			if (html_state != 2) {
+				fputs("<p style='color:blue;font-family:courier'>\n", stdout);
+				html_state = 2;
+			}
 			break;
+
 		case RED:
-			fputs("<p style='color:red;font-family:courier'>\n", stdout);
-			break;
-		default:
-			fputs("<p style='font-family:courier'>\n", stdout);
+			if (html_state != 3) {
+				fputs("<p style='color:red;font-family:courier'>\n", stdout);
+				html_state = 3;
+			}
 			break;
 		}
 
@@ -140,45 +145,73 @@ printbuf(char *s, int color)
 
 	} else if (latex_flag) {
 
-		fputs("\\begin{verbatim}\n", stdout);
+		if (latex_state == 0) {
+			fputs("\\begin{verbatim}\n", stdout);
+			latex_state = 1;
+		}
+
 		fputs(s, stdout);
-		fputs("\\end{verbatim}\n\n", stdout);
 
 	} else
 		fputs(s, stdout);
-}
-
-void
-eval_draw(void)
-{
-	push_symbol(NIL);
 }
 
 void
 cmdisplay(void)
 {
 	if (html_flag) {
-		fputs("<p>\n", stdout);
+
 		mathml();
+
+		fputs("<p>\n", stdout);
 		fputs(outbuf, stdout);
 		fputs("\n\n", stdout);
+
+		html_state = 0;
+
 	} else if (latex_flag) {
+
 		latex();
+
+		if (latex_state)
+			fputs("\\end{verbatim}\n\n", stdout);
 		fputs(outbuf, stdout);
 		fputs("\n\n", stdout);
+
+		latex_state = 0;
+
 	} else
 		display();
 }
 
 void
-eval_exit(void)
+begin_document(void)
 {
 	if (html_flag)
-		printf("</body></html>\n");
+		begin_html();
 	else if (latex_flag)
-		end_document();
+		begin_latex();
+}
 
-	exit(0);
+void
+end_document(void)
+{
+	if (html_flag)
+		end_html();
+	else if (latex_flag)
+		end_latex();
+}
+
+void
+begin_html(void)
+{
+	fputs("<html><head></head><body style='font-size:20pt'>\n\n", stdout);
+}
+
+void
+end_html(void)
+{
+	fputs("</body></html>\n", stdout);
 }
 
 char *begin_document_str =
@@ -195,13 +228,28 @@ char *begin_document_str =
 char *end_document_str = "\\end{document}\n";
 
 void
-begin_document(void)
+begin_latex(void)
 {
 	fputs(begin_document_str, stdout);
 }
 
 void
-end_document(void)
+end_latex(void)
 {
+	if (latex_state)
+		fputs("\\end{verbatim}\n\n", stdout);
 	fputs(end_document_str, stdout);
+}
+
+void
+eval_draw(void)
+{
+	push_symbol(NIL);
+}
+
+void
+eval_exit(void)
+{
+	end_document();
+	exit(0);
 }
