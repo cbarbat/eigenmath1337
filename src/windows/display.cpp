@@ -26,7 +26,8 @@ struct glyph {
 	int c, x, y;
 } chartab[YMAX];
 
-int yindex, level, emit_x;
+int yindex;
+int emit_x;
 int expr_level;
 int display_flag;
 
@@ -38,7 +39,7 @@ display(void)
 	p1 = pop();
 
 	yindex = 0;
-	level = 0;
+	expr_level = 0;
 	emit_x = 0;
 
 	emit_top_expr(p1);
@@ -66,7 +67,7 @@ emit_top_expr(struct atom *p)
 int
 will_be_displayed_as_fraction(struct atom *p)
 {
-	if (level > 0)
+	if (expr_level > 0)
 		return 0;
 	if (isfraction(p))
 		return 1;
@@ -85,7 +86,6 @@ will_be_displayed_as_fraction(struct atom *p)
 void
 emit_expr(struct atom *p)
 {
-	expr_level++;
 	if (car(p) == symbol(ADD)) {
 		p = cdr(p);
 		if (is_negative(car(p))) {
@@ -116,7 +116,6 @@ emit_expr(struct atom *p)
 		}
 		emit_term(p);
 	}
-	expr_level--;
 }
 
 void
@@ -159,7 +158,7 @@ emit_term(struct atom *p)
 	int n;
 	if (car(p) == symbol(MULTIPLY)) {
 		n = count_denominators(p);
-		if (n && level == 0)
+		if (n && expr_level == 0)
 			emit_fraction(p, n);
 		else
 			emit_multiply(p, n);
@@ -465,7 +464,7 @@ emit_factor(struct atom *p)
 	}
 
 	if (isnum(p)) {
-		if (level == 0)
+		if (expr_level == 0)
 			emit_numerical_fraction(p);
 		else
 			emit_number(p, 0);
@@ -565,7 +564,7 @@ emit_power(struct atom *p)
 		return;
 	}
 
-	if (level > 0) {
+	if (expr_level > 0) {
 		if (isminusone(caddr(p))) {
 			emit_char('1');
 			emit_char('/');
@@ -605,9 +604,9 @@ emit_power(struct atom *p)
 	else
 		emit_subexpr(cadr(p));
 	k2 = yindex;
-	level++;
+	expr_level++;
 	emit_expr(caddr(p));
-	level--;
+	expr_level--;
 	fixup_power(k1, k2);
 }
 
@@ -643,11 +642,11 @@ emit_denominator(struct atom *p, int n)
 
 	// emit exponent, don't emit minus sign
 
-	level++;
+	expr_level++;
 
 	emit_unsigned_expr(caddr(p));
 
-	level--;
+	expr_level--;
 
 	fixup_power(k1, k2);
 }
@@ -709,10 +708,10 @@ void
 emit_factorial_function(struct atom *p)
 {
 	p = cadr(p);
-	if (car(p) == symbol(ADD) || car(p) == symbol(MULTIPLY) || car(p) == symbol(POWER) || car(p) == symbol(FACTORIAL))
-		emit_subexpr(p);
-	else
+	if (isposint(p) || issymbol(p))
 		emit_expr(p);
+	else
+		emit_subexpr(p);
 	emit_char('!');
 }
 
@@ -855,12 +854,6 @@ get_size(int j, int k, int *h, int *w, int *y)
 }
 
 void
-displaychar(int c)
-{
-	emit_char(c);
-}
-
-void
 emit_char(int c)
 {
 	if (yindex == YMAX)
@@ -920,7 +913,7 @@ emit_number(struct atom *p, int emit_sign)
 			k1 = yindex;
 			emit_str("10");
 			k2 = yindex;
-			level++;
+			expr_level++;
 			if (*s == '+')
 				s++;
 			else if (*s == '-')
@@ -928,7 +921,7 @@ emit_number(struct atom *p, int emit_sign)
 			while (*s == '0')
 				s++; // skip leading zeroes
 			emit_str(s);
-			level--;
+			expr_level--;
 			fixup_power(k1, k2);
 		}
 		break;
@@ -998,7 +991,7 @@ char *
 getdisplaystr(void)
 {
 	yindex = 0;
-	level = 0;
+	expr_level = 0;
 	emit_x = 0;
 	emit_expr(pop());
 	fill_buf();

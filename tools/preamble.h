@@ -1,4 +1,4 @@
-/* February 11, 2020
+/* February 12, 2020
 
 To build and run:
 
@@ -13,11 +13,11 @@ To run a script:
 
 To generate LaTeX output:
 
-	./eigenmath --latex scriptfilename >foo.tex
+        ./eigenmath --latex scriptfilename >foo.tex
 
 To generate MathML output:
 
-	./eigenmath --html scriptfilename >foo.html
+        ./eigenmath --html scriptfilename >foo.html
 
 Sample scripts are available at www.eigenmath.org
 

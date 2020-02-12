@@ -1,9 +1,9 @@
 #include "defs.h"
 
 int html_flag;
-int html_state;
 int latex_flag;
-int latex_state;
+int mathjax_flag;
+int doc_state;
 char *infile;
 char inbuf[1000];
 
@@ -17,6 +17,8 @@ main(int argc, char *argv[])
 			html_flag = 1;
 		else if (strcmp(argv[i], "--latex") == 0)
 			latex_flag = 1;
+		else if (strcmp(argv[i], "--mathjax") == 0)
+			mathjax_flag = 1;
 		else
 			infile = argv[i];
 	}
@@ -25,11 +27,12 @@ main(int argc, char *argv[])
 
 	begin_document();
 
-	if (infile == NULL)
+	if (infile)
+		run_infile();
+
+	if (isatty(fileno(stdout)))
 		for (;;)
 			eval_stdin();
-
-	run_infile();
 
 	end_document();
 
@@ -39,7 +42,7 @@ main(int argc, char *argv[])
 void
 eval_stdin(void)
 {
-	if (html_flag)
+	if (html_flag || mathjax_flag)
 		printf("<!--? ");
 	else if (latex_flag)
 		printf("%%? ");
@@ -48,10 +51,10 @@ eval_stdin(void)
 
 	fgets(inbuf, sizeof inbuf, stdin);
 
-	if (html_flag)
+	if (html_flag || mathjax_flag)
 		printf("-->\n");
 
-	if (html_flag || latex_flag)
+	if (html_flag || latex_flag || mathjax_flag)
 		printbuf(inbuf, BLUE);
 
 	run(inbuf);
@@ -66,7 +69,7 @@ run_infile(void)
 	fd = open(infile, O_RDONLY, 0);
 
 	if (fd == -1) {
-		printf("cannot open %s\n", infile);
+		fprintf(stderr, "cannot open %s\n", infile);
 		exit(1);
 	}
 
@@ -75,7 +78,7 @@ run_infile(void)
 	n = lseek(fd, 0, SEEK_END);
 
 	if (n == -1) {
-		printf("lseek err\n");
+		fprintf(stderr, "lseek err\n");
 		exit(1);
 	}
 
@@ -87,7 +90,7 @@ run_infile(void)
 		malloc_kaput();
 
 	if (read(fd, buf, n) != n) {
-		printf("read err\n");
+		fprintf(stderr, "read err\n");
 		exit(1);
 	}
 
@@ -101,28 +104,28 @@ run_infile(void)
 void
 printbuf(char *s, int color)
 {
-	if (html_flag) {
+	if (html_flag || mathjax_flag) {
 
 		switch (color) {
 
 		case BLACK:
-			if (html_state != 1) {
+			if (doc_state != 1) {
 				fputs("<p style='color:black;font-family:courier'>\n", stdout);
-				html_state = 1;
+				doc_state = 1;
 			}
 			break;
 
 		case BLUE:
-			if (html_state != 2) {
+			if (doc_state != 2) {
 				fputs("<p style='color:blue;font-family:courier'>\n", stdout);
-				html_state = 2;
+				doc_state = 2;
 			}
 			break;
 
 		case RED:
-			if (html_state != 3) {
+			if (doc_state != 3) {
 				fputs("<p style='color:red;font-family:courier'>\n", stdout);
-				html_state = 3;
+				doc_state = 3;
 			}
 			break;
 		}
@@ -145,9 +148,9 @@ printbuf(char *s, int color)
 
 	} else if (latex_flag) {
 
-		if (latex_state == 0) {
+		if (doc_state == 0) {
 			fputs("\\begin{verbatim}\n", stdout);
-			latex_state = 1;
+			doc_state = 1;
 		}
 
 		fputs(s, stdout);
@@ -167,21 +170,27 @@ cmdisplay(void)
 		fputs(outbuf, stdout);
 		fputs("\n\n", stdout);
 
-		html_state = 0;
-
 	} else if (latex_flag) {
 
 		latex();
 
-		if (latex_state)
+		if (doc_state)
 			fputs("\\end{verbatim}\n\n", stdout);
 		fputs(outbuf, stdout);
 		fputs("\n\n", stdout);
 
-		latex_state = 0;
+	} else if (mathjax_flag) {
+
+		mathjax();
+
+		fputs("<p>\n", stdout);
+		fputs(outbuf, stdout);
+		fputs("\n\n", stdout);
 
 	} else
 		display();
+
+	doc_state = 0;
 }
 
 void
@@ -191,6 +200,8 @@ begin_document(void)
 		begin_html();
 	else if (latex_flag)
 		begin_latex();
+	else if (mathjax_flag)
+		begin_mathjax();
 }
 
 void
@@ -200,52 +211,65 @@ end_document(void)
 		end_html();
 	else if (latex_flag)
 		end_latex();
+	else if (mathjax_flag)
+		end_mathjax();
 }
 
 void
 begin_html(void)
 {
-	fputs("<html><head></head><body style='font-size:20pt'>\n\n", stdout);
+	fputs("<html>\n<head>\n</head>\n<body style='font-size:20pt'>\n\n", stdout);
 }
 
 void
 end_html(void)
 {
-	fputs("</body></html>\n", stdout);
+	fputs("</body>\n</html>\n", stdout);
 }
-
-char *begin_document_str =
-"\\documentclass[12pt]{article}\n"
-"\\usepackage{amsmath,amsfonts,amssymb}\n"
-"%% change margins\n"
-"\\addtolength{\\oddsidemargin}{-.875in}\n"
-"\\addtolength{\\evensidemargin}{-.875in}\n"
-"\\addtolength{\\textwidth}{1.75in}\n"
-"\\addtolength{\\topmargin}{-.875in}\n"
-"\\addtolength{\\textheight}{1.75in}\n"
-"\\begin{document}\n\n";
-
-char *end_document_str = "\\end{document}\n";
 
 void
 begin_latex(void)
 {
-	fputs(begin_document_str, stdout);
+	fputs(
+	"\\documentclass[12pt]{article}\n"
+	"\\usepackage{amsmath,amsfonts,amssymb}\n"
+	"%% change margins\n"
+	"\\addtolength{\\oddsidemargin}{-.875in}\n"
+	"\\addtolength{\\evensidemargin}{-.875in}\n"
+	"\\addtolength{\\textwidth}{1.75in}\n"
+	"\\addtolength{\\topmargin}{-.875in}\n"
+	"\\addtolength{\\textheight}{1.75in}\n"
+	"\\begin{document}\n\n",
+	stdout);
 }
 
 void
 end_latex(void)
 {
-	if (latex_state)
+	if (doc_state)
 		fputs("\\end{verbatim}\n\n", stdout);
-	fputs(end_document_str, stdout);
+	fputs("\\end{document}\n", stdout);
 }
 
 void
-eval_clear(void)
+begin_mathjax(void)
 {
-	clear_flag = 1;
-	push_symbol(NIL);
+	fputs(
+	"<!DOCTYPE html>\n"
+	"<html>\n"
+	"<head>\n"
+	"<script src='https://polyfill.io/v3/polyfill.min.js?features=es6'></script>\n"
+	"<script type='text/javascript' id='MathJax-script' async\n"
+	"src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js'></script>\n"
+	"</head>\n"
+	"<body>\n",
+	stdout);
+}
+
+void
+end_mathjax(void)
+{
+	fputs("</body>\n</html>\n", stdout);
 }
 
 void
@@ -259,4 +283,11 @@ eval_exit(void)
 {
 	end_document();
 	exit(0);
+}
+
+void
+eval_clear(void)
+{
+	clear_flag = 1;
+	push_symbol(NIL);
 }
