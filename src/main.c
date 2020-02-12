@@ -217,7 +217,7 @@ end_html(void)
 char *begin_document_str =
 "\\documentclass[12pt]{article}\n"
 "\\usepackage{amsmath,amsfonts,amssymb}\n"
-"\% change margins\n"
+"%% change margins\n"
 "\\addtolength{\\oddsidemargin}{-.875in}\n"
 "\\addtolength{\\evensidemargin}{-.875in}\n"
 "\\addtolength{\\textwidth}{1.75in}\n"
@@ -239,6 +239,13 @@ end_latex(void)
 	if (latex_state)
 		fputs("\\end{verbatim}\n\n", stdout);
 	fputs(end_document_str, stdout);
+}
+
+void
+eval_clear(void)
+{
+	clear_flag = 1;
+	push_symbol(NIL);
 }
 
 void

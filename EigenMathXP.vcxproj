@@ -178,6 +178,7 @@
     <ClCompile Include="src\eigen.c" />
     <ClCompile Include="src\erf.c" />
     <ClCompile Include="src\erfc.c" />
+    <ClCompile Include="src\eval.c" />
     <ClCompile Include="src\exp.c" />
     <ClCompile Include="src\expand.c" />
     <ClCompile Include="src\expcos.c" />
@@ -204,11 +205,13 @@
     <ClCompile Include="src\isprime.c" />
     <ClCompile Include="src\itab.c" />
     <ClCompile Include="src\laguerre.c" />
+    <ClCompile Include="src\latex.c" />
     <ClCompile Include="src\lcm.c" />
     <ClCompile Include="src\leading.c" />
     <ClCompile Include="src\legendre.c" />
     <ClCompile Include="src\log.c" />
     <ClCompile Include="src\mag.c" />
+    <ClCompile Include="src\mathml.c" />
     <ClCompile Include="src\mod.c" />
     <ClCompile Include="src\multiply.c" />
     <ClCompile Include="src\nroots.c" />
@@ -250,7 +253,6 @@
     <ClCompile Include="src\windows\cmdisplay.cpp" />
     <ClCompile Include="src\windows\display.cpp" />
     <ClCompile Include="src\windows\draw.cpp" />
-    <ClCompile Include="src\windows\eval_gui.c" />
     <ClCompile Include="src\windows\history.cpp" />
     <ClCompile Include="src\windows\MainXP.cpp" />
     <ClCompile Include="src\windows\window.cpp" />

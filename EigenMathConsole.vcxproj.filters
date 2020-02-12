@@ -345,6 +345,12 @@
     <ClCompile Include="src\pratt.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\latex.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mathml.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\resource.h">

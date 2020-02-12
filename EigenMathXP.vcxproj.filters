@@ -377,7 +377,13 @@
     <ClCompile Include="src\windows\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\windows\eval_gui.c">
+    <ClCompile Include="src\latex.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mathml.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\eval.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -39,7 +39,9 @@ extern int text_width(int, char *);
 
 #define MAXHIST 10001
 
-extern "C" {int test_flag;}
+extern "C" {
+	int test_flag;
+}
 int term_flag;
 
 //	type
@@ -155,6 +157,15 @@ clear_term(void)
 	total_w = 0;
 	total_h = 0;
 	update_display_request = 1;
+}
+
+void
+eval_clear(void)
+{
+	if (test_flag == 0)
+		clear_term();
+	clear_flag = 1;
+	push_symbol(NIL);
 }
 
 void

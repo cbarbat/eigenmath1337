@@ -252,13 +252,6 @@ eval_check(void)
 }
 
 void
-eval_clear(void)
-{
-	clear_flag = 1;
-	push_symbol(NIL);
-}
-
-void
 eval_dim(void)
 {
 	int n;

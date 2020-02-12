@@ -196,12 +196,14 @@
     <ClCompile Include="src\isprime.c" />
     <ClCompile Include="src\itab.c" />
     <ClCompile Include="src\laguerre.c" />
+    <ClCompile Include="src\latex.c" />
     <ClCompile Include="src\lcm.c" />
     <ClCompile Include="src\leading.c" />
     <ClCompile Include="src\legendre.c" />
     <ClCompile Include="src\log.c" />
     <ClCompile Include="src\mag.c" />
     <ClCompile Include="src\main.c" />
+    <ClCompile Include="src\mathml.c" />
     <ClCompile Include="src\mod.c" />
     <ClCompile Include="src\multiply.c" />
     <ClCompile Include="src\nroots.c" />

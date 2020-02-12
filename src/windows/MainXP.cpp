@@ -257,7 +257,8 @@ ACCEL accel[NACCEL] = {
 	{FCONTROL,	27,	ID_ESC},	// ^[
 };
 
-extern "C" void
+extern "C"
+void
 eval_exit(void)
 {
 	PostMessage(
@@ -274,7 +275,8 @@ echo_input(const char *s)
 	printstr("\n");
 }
 
-extern "C" void
+extern "C"
+void
 printbuf(char *s, int color)
 {
 	printstr(s);

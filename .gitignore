@@ -7,6 +7,8 @@ EigenMathXP_x64
 EigenMathConsole_Win32
 EigenMathConsole_x64
 
+.vs
+
 # Prerequisites
 *.d
 
