@@ -211,6 +211,7 @@
     <ClCompile Include="src\legendre.c" />
     <ClCompile Include="src\log.c" />
     <ClCompile Include="src\mag.c" />
+    <ClCompile Include="src\mathjax.c" />
     <ClCompile Include="src\mathml.c" />
     <ClCompile Include="src\mod.c" />
     <ClCompile Include="src\multiply.c" />
@@ -251,7 +252,6 @@
     <ClCompile Include="src\transpose.c" />
     <ClCompile Include="src\userfunc.c" />
     <ClCompile Include="src\windows\cmdisplay.cpp" />
-    <ClCompile Include="src\windows\display.cpp" />
     <ClCompile Include="src\windows\draw.cpp" />
     <ClCompile Include="src\windows\history.cpp" />
     <ClCompile Include="src\windows\MainXP.cpp" />

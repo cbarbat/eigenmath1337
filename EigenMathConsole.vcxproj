@@ -203,6 +203,7 @@
     <ClCompile Include="src\log.c" />
     <ClCompile Include="src\mag.c" />
     <ClCompile Include="src\main.c" />
+    <ClCompile Include="src\mathjax.c" />
     <ClCompile Include="src\mathml.c" />
     <ClCompile Include="src\mod.c" />
     <ClCompile Include="src\multiply.c" />

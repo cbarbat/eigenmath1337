@@ -351,6 +351,9 @@
     <ClCompile Include="src\mathml.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\mathjax.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\resource.h">
