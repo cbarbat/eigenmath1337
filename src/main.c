@@ -31,10 +31,10 @@ main(int argc, char *argv[])
 
 	if (infile)
 		run_infile();
-	else
-		if (isatty(fileno(stdout)))
-			for (;;)
-				eval_stdin();
+	
+	if (isatty(fileno(stdout)))
+		for (;;)
+			eval_stdin();
 
 	end_document();
 
