@@ -25,16 +25,14 @@ main(int argc, char *argv[])
 			infile = argv[i];
 	}
 
-	clear();
-
 	begin_document();
 
 	if (infile)
 		run_infile();
-	
+
 	if (isatty(fileno(stdout)))
 		for (;;)
-			eval_stdin();
+			run_stdin();
 
 	end_document();
 
@@ -42,7 +40,7 @@ main(int argc, char *argv[])
 }
 
 void
-eval_stdin(void)
+run_stdin(void)
 {
 	prompt();
 	fgets(inbuf, sizeof inbuf, stdin);
@@ -294,7 +292,7 @@ begin_latex(void)
 	fputs(
 	"\\documentclass[12pt]{article}\n"
 	"\\usepackage{amsmath,amsfonts,amssymb}\n"
-	"%% change margins\n"
+	"\% change margins\n"
 	"\\addtolength{\\oddsidemargin}{-.875in}\n"
 	"\\addtolength{\\evensidemargin}{-.875in}\n"
 	"\\addtolength{\\textwidth}{1.75in}\n"
