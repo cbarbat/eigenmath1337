@@ -31,8 +31,7 @@ main(int argc, char *argv[])
 		run_infile();
 
 	if (isatty(fileno(stdout)))
-		for (;;)
-			run_stdin();
+		run_stdin();
 
 	end_document();
 
@@ -42,11 +41,12 @@ main(int argc, char *argv[])
 void
 run_stdin(void)
 {
-	prompt();
-	fgets(inbuf, sizeof inbuf, stdin);
-	unprompt();
-
-	run(inbuf);
+	for (;;) {
+		prompt();
+		fgets(inbuf, sizeof inbuf, stdin);
+		echo();
+		run(inbuf);
+	}
 }
 
 void
@@ -70,7 +70,7 @@ prompt(void)
 }
 
 void
-unprompt(void)
+echo(void)
 {
 	switch (doc_type) {
 
@@ -292,12 +292,7 @@ begin_latex(void)
 	fputs(
 	"\\documentclass[12pt]{article}\n"
 	"\\usepackage{amsmath,amsfonts,amssymb}\n"
-	"\% change margins\n"
-	"\\addtolength{\\oddsidemargin}{-.875in}\n"
-	"\\addtolength{\\evensidemargin}{-.875in}\n"
-	"\\addtolength{\\textwidth}{1.75in}\n"
-	"\\addtolength{\\topmargin}{-.875in}\n"
-	"\\addtolength{\\textheight}{1.75in}\n"
+	"\\usepackage[margin=2cm]{geometry}\n"
 	"\\begin{document}\n\n",
 	stdout);
 }
