@@ -12,7 +12,7 @@ run(char *s)
 	if (setjmp(stop_return))
 		return;
 
-	clear(0);
+	init(0);
 
 	for (;;) {
 
@@ -34,7 +34,7 @@ run(char *s)
 
 
 		if (clear_flag)
-			clear(1);
+			init(1);
 	}
 }
 
@@ -76,7 +76,7 @@ char *init_script[] = {
 };
 
 void
-clear(int init)
+init(int level)
 {
 	int i, n;
 
@@ -99,7 +99,7 @@ clear(int init)
 	p8 = symbol(NIL);
 	p9 = symbol(NIL);
 
-	if (symtab[0].u.printname && init == 0) {
+	if (symtab[0].u.printname && level < 1) {
 		set_binding(symbol(TRACE), zero);
 		return;
 	}
