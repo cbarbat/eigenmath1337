@@ -14,12 +14,7 @@ run(char *s)
 
 	clear(0);
 
-	while (1) {
-
-		if (iszero(binding[AUTOEXPAND]))
-			expanding = 0;
-		else
-			expanding = 1;
+	for (;;) {
 
 		if (pratt_flag) {
 			s = scan_with_pratt(s, 0);
@@ -34,20 +29,13 @@ run(char *s)
 
 		eval_and_print_result(1);
 
-		check_stack();
+		if (tos || tof)
+			stop("internal error 1");
+
 
 		if (clear_flag)
 			clear(1);
 	}
-}
-
-void
-check_stack(void)
-{
-	if (tos != 0)
-		stop("stack error");
-	if (tof != 0)
-		stop("frame error");
 }
 
 void
@@ -75,7 +63,6 @@ stop(char *s)
 char *init_script[] = {
 	"e=exp(1)",
 	"i=sqrt(-1)",
-	"autoexpand=1",
 	"trange=(-pi,pi)",
 	"xrange=(-10,10)",
 	"yrange=(-10,10)",
@@ -96,6 +83,7 @@ clear(int init)
 	stop_flag = 0;
 	draw_flag = 0;
 	clear_flag = 0;
+	expanding = 1;
 
 	tos = 0;
 	tof = 0;
