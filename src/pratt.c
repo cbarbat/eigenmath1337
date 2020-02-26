@@ -58,21 +58,21 @@ struct token_info sym_table[MAX_SYM + 1] = { // stores the nuds and leds
 	{T_DOUBLE  , MIN_BP, MIN_BP    , &nud_atom, &led_err}, // nilfix
 	{T_STRING  , MIN_BP, MIN_BP    , &nud_atom, &led_err}, // nilfix
 	{T_SYMBOL  , MIN_BP, MIN_BP    , &nud_atom, &led_err}, // nilfix
-	{T_FUNCTION, MIN_BP, MIN_BP    , &nud_func, &led_err}, // nilfix
-	{'('       , MIN_BP, MIN_BP    , &nud_tens, &led_err}, // nilfix
-	{'='       , 10    , 10        , &nud_err , &led_rel}, // infixN
-	{T_EQ      , 20    , 20        , &nud_err , &led_rel}, // infixN
-	{T_GTEQ    , 20    , 20        , &nud_err , &led_rel}, // infixN
-	{T_LTEQ    , 20    , 20        , &nud_err , &led_rel}, // infixN
-	{'>'       , 20    , 20        , &nud_err , &led_rel}, // infixN
-	{'<'       , 20    , 20        , &nud_err , &led_rel}, // infixN
+	{T_FUNCTION, MIN_BP, MIN_BP    , &nud_func, &led_err}, // nilfix rbp 0
+	{'('       , MIN_BP, MIN_BP    , &nud_tens, &led_err}, // nilfix rbp 0
+	{'='       , 10    , 10        , &nud_err , &led_rel}, // infixN rbp 10
+	{T_EQ      , 20    , 20        , &nud_err , &led_rel}, // infixN rbp 20
+	{T_GTEQ    , 20    , 20        , &nud_err , &led_rel}, // infixN rbp 20
+	{T_LTEQ    , 20    , 20        , &nud_err , &led_rel}, // infixN rbp 20
+	{'>'       , 20    , 20        , &nud_err , &led_rel}, // infixN rbp 20
+	{'<'       , 20    , 20        , &nud_err , &led_rel}, // infixN rbp 20
 	{'+'       , 30    , 31        , &nud_sign, &led_add}, // add, infixL rbp 30
 	{'-'       , 30    , 31        , &nud_sign, &led_add}, // sub, infixL rbp 30
 	{'*'       , MUL_BP, MUL_BP + 1, &nud_err , &led_mul}, // mul, infixL rbp 40
 	{'/'       , MUL_BP, MUL_BP + 1, &nud_err , &led_mul}, // div, infixL rbp 40
 	{'^'       , 50    , 51        , &nud_err , &led_pow}, // pow, infixR rbp 49
 	{'!'       , 60    , 61        , &nud_err , &led_fac}, // suffix
-	{'['       , 80    , 81        , &nud_err , &led_arr}, // array access infixL
+	{'['       , 80    , 81        , &nud_err , &led_arr}, // array access infixL rbp 0
 	{T_END     , MIN_BP, MIN_BP    , &nud_err , &led_err}  // dummy
 };
 
