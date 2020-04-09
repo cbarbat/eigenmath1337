@@ -1,5 +1,6 @@
 void eval_abs(void);
 void absval(void);
+void absval_nib(void);
 void absval_tensor(void);
 void eval_add(void);
 void add(void);
@@ -121,6 +122,8 @@ int coeff(void);
 void eval_cofactor(void);
 void eval_conj(void);
 void conjugate(void);
+void conjugate_subst(void);
+void conjugate_subst_nib(void);
 void eval_contract(void);
 void contract(void);
 void contract_nib(void);
