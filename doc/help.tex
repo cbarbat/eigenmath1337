@@ -1,0 +1,1650 @@
+\section{Function Reference}
+
+\subsection*{abs($x$)}
+
+Returns the absolute value or vector length of $x$.
+
+{\color{blue}
+\begin{verbatim}
+X = (x,y,z)
+abs(X)
+\end{verbatim}
+}
+
+\noindent
+$\left(x^2+y^2+z^2\right)^{1/2}$
+
+\subsection*{adj($m$)}
+
+Returns the adjunct of matrix $m$.
+Adjunct is equal to determinant times inverse.
+
+{\color{blue}
+\begin{verbatim}
+A = ((a,b),(c,d))
+adj(A) == det(A) inv(A)
+\end{verbatim}
+}
+
+\noindent
+$1$
+
+\subsection*{and($a,b,\ldots$)}
+
+Returns 1 if all arguments are true (nonzero).
+Returns 0 otherwise.
+
+{\color{blue}
+\begin{verbatim}
+and(1=1,2=2)
+\end{verbatim}
+}
+
+\noindent
+$1$
+
+\subsection*{arccos($x$)}
+
+Returns the arc cosine of $x$.
+
+{\color{blue}
+\begin{verbatim}
+arccos(1/2)
+\end{verbatim}
+}
+
+\noindent
+$\tfrac{1}{3}\pi$
+
+\subsection*{arccosh($x$)}
+
+Returns the arc hyperbolic cosine of $x$.
+
+\subsection*{arcsin($x$)}
+
+Returns the arc sine of $x$.
+
+{\color{blue}
+\begin{verbatim}
+arcsin(1/2)
+\end{verbatim}
+}
+
+\noindent
+$\tfrac{1}{6}\pi$
+
+\subsection*{arcsinh($x$)}
+
+Returns the arc hyperbolic sine of $x$.
+
+\subsection*{arctan($y,x$)}
+
+Returns the arc tangent of $y$ over $x$.
+If $x$ is omitted then $x=1$ is used.
+
+{\color{blue}
+\begin{verbatim}
+arctan(1,0)
+\end{verbatim}
+}
+
+\noindent
+$\tfrac{1}{2}\pi$
+
+\subsection*{arctanh($x$)}
+
+Returns the arc hyperbolic tangent of $x$.
+
+\subsection*{arg($z$)}
+
+Returns the angle of complex $z$.
+
+{\color{blue}
+\begin{verbatim}
+arg(2 - 3i)
+\end{verbatim}
+}
+
+\noindent
+$\arctan(-3,2)$
+
+\subsection*{besselj($x,n$)}
+
+Returns a solution to the Bessel differential equation.
+
+{\color{blue}
+\begin{verbatim}
+besselj(x,1/2)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle \frac{2^{1/2}\sin(x)}{\pi^{1/2}\,x^{1/2}}$
+
+\subsection*{binding($s$)}
+
+The result of evaluating a symbol can differ from the symbol's binding.
+For example, the result may be expanded.
+The {\tt binding} function returns the actual binding of a symbol.
+
+{\color{blue}
+\begin{verbatim}
+p = quote((x + 1)^2)
+p
+\end{verbatim}
+}
+
+\noindent
+$p=x^2+2x+1$
+
+{\color{blue}
+\begin{verbatim}
+binding(p)
+\end{verbatim}
+}
+
+\noindent
+$(x+1)^2$
+
+\subsection*{binomial($n,k$)}
+
+Returns the coefficient of $x^ky^{n-k}$ in $(x+y)^n$.
+Binomial and {\tt choose} are the same function.
+
+{\color{blue}
+\begin{verbatim}
+binomial(52,5)
+\end{verbatim}
+}
+
+\noindent
+$2598960$
+
+\subsection*{ceiling($x$)}
+
+Returns the smallest integer greater than or equal to $x$.
+
+{\color{blue}
+\begin{verbatim}
+ceiling(1/2)
+\end{verbatim}
+}
+
+\noindent
+$1$
+
+\subsection*{check($x$)}
+
+If $x$ is true (nonzero) then continue in a script, else stop.
+Use {\tt A=B} or {\tt A==B} to test for A equals B.
+
+{\color{blue}
+\begin{verbatim}
+A = 1
+B = 1
+check(A=B) -- script stops here if A not equal to B
+\end{verbatim}
+}
+
+\subsection*{choose($n,k$)}
+
+Returns the number of combinations of $n$ items taken $k$ at a time.
+The following example computes the number of poker hands.
+
+{\color{blue}
+\begin{verbatim}
+choose(52,5)
+\end{verbatim}
+}
+
+\noindent
+$2598960$
+
+\subsection*{circexp($x$)}
+
+Returns expression $x$ with circular and hyperbolic functions
+converted to exponentials.
+
+{\color{blue}
+\begin{verbatim}
+circexp(cos(x) + i sin(x))
+\end{verbatim}
+}
+
+\noindent
+$\exp(ix)$
+
+\subsection*{clear}
+
+Clears all symbol definitions.
+
+\subsection*{clock($z$)}
+
+Returns complex $z$ in polar form with base of negative 1 instead of $e$.
+
+{\color{blue}
+\begin{verbatim}
+clock(2 - 3i)
+\end{verbatim}
+}
+
+\noindent
+$13^{1/2}\,(-1)^{\arctan(-3,2)/\pi}$
+
+\subsection*{coeff($p,x,n$)}
+
+Returns the coefficient of $x^n$ in polynomial $p$.
+
+{\color{blue}
+\begin{verbatim}
+p = x^3 + 6x^2 + 12x + 8
+coeff(p,x,2)
+\end{verbatim}
+}
+
+\noindent
+$6$
+
+\subsection*{cofactor($m,i,j$)}
+
+Returns a cofactor of matrix $m$.
+The cofactor matrix is the transpose of the adjunct of $m$.
+This function returns the cofactor component
+at row $i$ and column $j$.
+
+{\color{blue}
+\begin{verbatim}
+A = ((a,b),(c,d))
+cofactor(A,1,2) == transpose(adj(A))[1,2]
+\end{verbatim}
+}
+
+\noindent
+$1$
+
+\subsection*{conj($z$)}
+
+Returns the complex conjugate of $z$.
+
+{\color{blue}
+\begin{verbatim}
+conj(2 - 3i)
+\end{verbatim}
+}
+
+\noindent
+$2 + 3 i$
+
+\subsection*{contract($a,i,j$)}
+
+Returns tensor $a$ summed over indices $i$ and $j$.
+If $i$ and $j$ are omitted then 1 and 2 are used.
+The expression {\tt contract(m)} computes the trace of matrix $m$.
+
+{\color{blue}
+\begin{verbatim}
+A = ((a,b),(c,d))
+contract(A)
+\end{verbatim}
+}
+
+\noindent
+$a + d$
+
+\subsection*{cos($x$)}
+
+Returns the cosine of $x$.
+
+{\color{blue}
+\begin{verbatim}
+cos(pi/4)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle \frac{1}{2^{1/2}}$
+
+\subsection*{cosh($x$)}
+
+Returns the hyperbolic cosine of $x$.
+
+{\color{blue}
+\begin{verbatim}
+circexp(cosh(x))
+\end{verbatim}
+}
+
+\noindent
+$\tfrac{1}{2}\exp(-x)+\tfrac{1}{2}\exp(x)$
+
+
+\subsection*{cross($u,v$)}
+
+Returns the cross product of vectors $u$ and $v$.
+It is OK to redefine {\tt cross}.
+This is the default definition.
+
+{\color{blue}
+\begin{verbatim}
+cross(u,v) = (u[2] v[3] - u[3] v[2],
+              u[3] v[1] - u[1] v[3],
+              u[1] v[2] - u[2] v[1])
+\end{verbatim}
+}
+
+\subsection*{curl($u$)}
+
+Returns the curl of vector $u$.
+It is OK to redefine {\tt curl}.
+This is the default definition.
+
+{\color{blue}
+\begin{verbatim}
+curl(u) = (d(u[3],y) - d(u[2],z),
+           d(u[1],z) - d(u[3],x),
+           d(u[2],x) - d(u[1],y))
+\end{verbatim}
+}
+
+\subsection*{d($f,x$)}
+
+Returns the partial derivative of $f$ with respect to $x$.
+
+{\color{blue}
+\begin{verbatim}
+d(x^2,x)
+\end{verbatim}
+}
+
+\noindent
+$2x$
+
+\bigskip
+\noindent
+Argument $f$ can be a tensor of any rank.
+Argument $x$ can be a vector.
+When $x$ is a vector the result is the gradient of $f$.
+
+{\color{blue}
+\begin{verbatim}
+F = (f(),g(),h())
+X = (x,y,z)
+d(F,X)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle \begin{bmatrix}
+\operatorname{d}(f(),x) & \operatorname{d}(f(),y) &  \operatorname{d}(f(),z)\\
+\operatorname{d}(g(),x) & \operatorname{d}(g(),y) &  \operatorname{d}(g(),z)\\
+\operatorname{d}(h(),x) & \operatorname{d}(h(),y) &  \operatorname{d}(h(),z)
+\end{bmatrix}
+$
+
+\bigskip
+\noindent
+It is OK to use {\tt d} as a variable name.
+It will not conflict with function {\tt d}.
+
+\bigskip
+\noindent
+It is OK to redefine {\tt d} as a different function.
+The function {\tt derivative}, a synonym for {\tt d},
+can still be used to obtain a partial derivative.
+
+{\color{blue}
+\begin{verbatim}
+d(x,y) = x - y
+derivative(x^2,x)
+\end{verbatim}
+}
+
+\noindent
+$2x$
+
+\subsection*{defint($f,x,a,b$)}
+
+Returns the definite integral of $f$ with respect to $x$
+evaluated from $a$ to $b$.
+The argument list can be extended for multiple integrals
+as shown in the following example.
+
+{\color{blue}
+\begin{verbatim}
+f = (1 + cos(theta)^2) sin(theta)
+defint(f, theta, 0, pi, phi, 0, 2pi) -- integrate over theta then over phi
+\end{verbatim}
+}
+
+\noindent
+$\tfrac{16}{3}\pi$
+
+\subsection*{deg($p,x$)}
+
+Returns the degree of polynomial $p(x)$.
+
+{\color{blue}
+\begin{verbatim}
+p = (2x + 1)^3
+deg(p,x)
+\end{verbatim}
+}
+
+\noindent
+$3$
+
+\subsection*{denominator($x$)}
+
+Returns the denominator of expression $x$.
+
+{\color{blue}
+\begin{verbatim}
+denominator(a/b)
+\end{verbatim}
+}
+
+\noindent
+$b$
+
+\subsection*{det($m$)}
+
+Returns the determinant of matrix $m$.
+
+{\color{blue}
+\begin{verbatim}
+A = ((a,b),(c,d))
+det(A)
+\end{verbatim}
+}
+
+\noindent
+$a d - b c$
+
+\subsection*{dim($a,n$)}
+
+Returns the dimension of the $n$th index of tensor $a$.
+Index numbering starts with 1.
+
+{\color{blue}
+\begin{verbatim}
+A = ((1,2),(3,4),(5,6))
+dim(A,1)
+\end{verbatim}
+}
+
+\noindent
+$3$
+
+\subsection*{div($u$)}
+
+Returns the divergence of vector $u$.
+It is OK to redefine {\tt div}.
+This is the default definition.
+
+{\color{blue}
+\begin{verbatim}
+div(u) = d(u[1],x) + d(u[2],y) + d(u[3],z)
+\end{verbatim}
+}
+
+\subsection*{do($a,b,\ldots$)}
+
+Evaluates each argument from left to right.
+Returns the result of the last argument.
+
+{\color{blue}
+\begin{verbatim}
+do(A=1,B=2,A+B)
+\end{verbatim}
+}
+
+\noindent
+$3$
+
+\subsection*{dot($a,b,\ldots$)}
+
+Returns the dot or matrix product of vectors, matrices, and tensors.
+
+{\color{blue}
+\begin{verbatim}
+-- solve for X in AX=B
+A = ((1,2),(3,4))
+B = (5,6)
+X = dot(inv(A),B)
+X
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle \begin{bmatrix}-4\\ \tfrac{9}{2}\end{bmatrix}$
+
+\subsection*{draw($f,x$)}
+
+Draws a graph of $f(x)$.
+Drawing ranges can be set with {\tt xrange} and {\tt yrange}.
+
+\subsection*{e}
+
+Symbol {\tt e} is initialized to the natural number $e=\exp(1)$.
+
+{\color{blue}
+\begin{verbatim}
+e^x
+\end{verbatim}
+}
+
+\noindent
+$\exp(x)$
+
+\bigskip
+\noindent
+Note: It is OK to clear or redefine {\tt e} and use the symbol for something else.
+
+\subsection*{eigen($m$)}
+
+Computes eigenvalues and eigenvectors numerically.
+Matrix $m$ is required to be both numerical and symmetric.
+Eigenvectors are returned in Q and eigenvalues are returned in D.
+Each row of Q is an eigenvector.
+Each diagonal element of D is an eigenvalue.
+
+{\color{blue}
+\begin{verbatim}
+A = ((1,2),(2,1))
+eigen(A)
+dot(transpose(Q),D,Q)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle \begin{bmatrix}
+1.0 & 2.0\\
+2.0 & 1.0
+\end{bmatrix}
+$
+
+\subsection*{erf($x$)}
+
+Error function of $x$.
+
+\subsection*{erfc($x$)}
+
+Complementary error function of $x$.
+
+\subsection*{eval($f,x,a$)}
+
+Returns $f$ evaluated at $x$ equals $a$.
+
+{\color{blue}
+\begin{verbatim}
+eval(x^2 + 3,x,0)
+\end{verbatim}
+}
+
+\noindent
+$3$
+
+\subsection*{exp($x$)}
+
+Returns the exponential of $x$.
+
+{\color{blue}
+\begin{verbatim}
+exp(i pi)
+\end{verbatim}
+}
+
+\noindent
+$-1$
+
+\subsection*{expand($r,x$)}
+
+Returns the partial fraction expansion of the ratio of polynomials $r$ in $x$.
+
+{\color{blue}
+\begin{verbatim}
+p = (x + 1)^2
+q = (x + 2)^2
+expand(p/q,x)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle -\frac{2}{x+2}+\frac{1}{x^2+4x+4}+1$
+
+\subsection*{expcos($z$)}
+
+Returns the cosine of $z$ in exponential form.
+
+{\color{blue}
+\begin{verbatim}
+expcos(z)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle \tfrac{1}{2}\exp(iz)+\tfrac{1}{2}\exp(-iz)$
+
+\subsection*{expcosh($z$)}
+
+Returns the hyperbolic cosine of $z$ in exponential form.
+
+{\color{blue}
+\begin{verbatim}
+expcosh(z)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle \tfrac{1}{2}\exp(-z)+\tfrac{1}{2}\exp(z)$
+
+\subsection*{expsin($z$)}
+
+Returns the sine of $z$ in exponential form.
+
+{\color{blue}
+\begin{verbatim}
+expsin(z)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle -\tfrac{1}{2}i\exp(iz)+\tfrac{1}{2}i\exp(-iz)$
+
+\subsection*{expsinh($z$)}
+
+Returns the hyperbolic sine of $z$ in exponential form.
+
+{\color{blue}
+\begin{verbatim}
+expsinh(z)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle -\tfrac{1}{2}\exp(-z)+\tfrac{1}{2}\exp(z)$
+
+\subsection*{exptan($z$)}
+
+Returns the tangent of $z$ in exponential form.
+
+{\color{blue}
+\begin{verbatim}
+exptan(z)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle \frac{i}{\exp(2iz)+1}-\frac{i\exp(2iz)}{\exp(2iz)+1}$
+
+\subsection*{exptanh($z$)}
+
+Returns the hyperbolic tangent of $z$ in exponential form.
+
+{\color{blue}
+\begin{verbatim}
+exptanh(z)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle -\frac{1}{\exp(2z)+1}+\frac{\exp(2z)}{\exp(2z)+1}$
+
+\subsection*{factor($n$)}
+
+Factors integer $n$.
+
+{\color{blue}
+\begin{verbatim}
+factor(10!)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle 2^8\times 3^4\times 5^2\times 7^1$
+
+\subsection*{factor($p,x$)}
+
+Factors polynomial $p(x)$.
+The argument list can be extended for multivariate polynomials.
+
+{\color{blue}
+\begin{verbatim}
+p = 2x + x y + y + 2
+factor(p,x,y)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle (x+1)(y+2)$
+
+\bigskip
+\noindent
+Note: Factor returns an unexpanded expression.
+If the result is assigned to a symbol, evaluating
+the symbol will expand the result.
+Use {\tt binding} to retrieve the unexpanded expression.
+
+{\color{blue}
+\begin{verbatim}
+q = factor(p,x)
+binding(q)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle (x+1)(y+2)$
+
+\subsection*{factorial($n$)}
+
+Returns the factorial of $n$.
+The expression {\tt n!} can also be used.
+
+{\color{blue}
+\begin{verbatim}
+100!
+\end{verbatim}
+}
+
+\noindent
+$93326215443944152681699238856266700490715968264381621468592963895217599993229915$\\
+$608941463976156518286253697920827223758251185210916864000000000000000000000000$
+
+\subsection*{filter($f,a,b,\ldots$)}
+
+Returns $f$ excluding any terms containing $a$, $b$, etc.
+
+{\color{blue}
+\begin{verbatim}
+p = x^2 + 3x + 2
+filter(p,x^2)
+\end{verbatim}
+}
+
+\noindent
+$3x+2$
+
+\subsection*{float($x$)}
+
+Returns expression $x$ with rational numbers and integers converted to
+floating point values.
+The symbol {\tt pi} and the natural number are also converted.
+
+{\color{blue}
+\begin{verbatim}
+float(212^17)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle 3.52947\times 10^{39}$
+
+\subsection*{floor($x$)}
+
+Returns the largest integer less than or equal to $x$.
+
+\par
+{\color{blue}
+\begin{verbatim}
+floor(1/2)
+\end{verbatim}
+}
+
+\noindent
+$0$
+
+\subsection*{for($i,j,k,a,b,\ldots$)}
+
+For $i$ equals $j$ through $k$ evaluate $a$, $b$, etc.
+The original value of symbol $i$ is restored after {\tt for} completes.
+
+{\color{blue}
+\begin{verbatim}
+for(k,1,3,A=k,print(A))
+\end{verbatim}
+}
+
+\noindent
+$A=1$\\
+$A=2$\\
+$A=3$
+
+\subsection*{gcd($a,b,\ldots$)}
+
+Returns the greatest common divisor of expressions.
+
+{\color{blue}
+\begin{verbatim}
+gcd(x,x y)
+\end{verbatim}
+}
+
+\noindent
+$x$
+
+\subsection*{hermite($x,n$)}
+
+Returns the $n$th Hermite polynomial in $x$.
+
+{\color{blue}
+\begin{verbatim}
+hermite(x,3)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle 8x^3-12x$
+
+
+\subsection*{hilbert($n$)}
+
+Returns an $n$ by $n$ Hilbert matrix.
+
+{\color{blue}
+\begin{verbatim}
+hilbert(3)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle
+\begin{bmatrix}
+1 & \tfrac{1}{2} & \tfrac{1}{3}\\ \\
+\tfrac{1}{2} & \tfrac{1}{3} & \tfrac{1}{4}\\ \\
+\tfrac{1}{3} & \tfrac{1}{4} & \tfrac{1}{5}
+\end{bmatrix}
+$
+
+\subsection*{i}
+
+Symbol {\tt i} is initialized to the imaginary unit $\sqrt{-1}$.
+
+{\color{blue}
+\begin{verbatim}
+exp(i pi)
+\end{verbatim}
+}
+
+\noindent
+$-1$
+
+\bigskip
+\noindent
+Note: It is OK to clear or redefine {\tt i} and use the symbol for something else.
+
+\subsection*{imag($z$)}
+
+Returns the imaginary part of complex $z$.
+
+{\color{blue}
+\begin{verbatim}
+imag(2 - 3i)
+\end{verbatim}
+}
+
+\noindent
+$-3$
+
+\subsection*{inner($a,b,\ldots$)}
+
+Returns the inner product of tensors.
+
+{\color{blue}
+\begin{verbatim}
+A = ((a,b),(c,d))
+B = (x,y)
+inner(A,B)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle
+\begin{bmatrix}
+ax+by\\
+cx+dy
+\end{bmatrix}
+$
+
+\bigskip
+\noindent
+Note: {\tt inner} and {\tt dot} are the same function.
+
+\subsection*{integral($f,x$)}
+
+Returns the integral of $f$ with respect to $x$.
+
+{\color{blue}
+\begin{verbatim}
+integral(x^2,x)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle \tfrac{1}{3}x^3$
+
+\subsection*{inv($m$)}
+
+Returns the inverse of matrix $m$.
+
+{\color{blue}
+\begin{verbatim}
+A = ((1,2),(3,4))
+inv(A)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle
+\begin{bmatrix}
+-2 & 1\\
+\tfrac{3}{2} & -\tfrac{1}{2}
+\end{bmatrix}
+$
+
+\subsection*{isprime($n$)}
+
+Returns 1 if $n$ is a prime number. Returns zero otherwise.
+
+{\color{blue}
+\begin{verbatim}
+isprime(2^31 - 1)
+\end{verbatim}
+}
+
+\noindent
+1
+
+\subsection*{j}
+
+Set {\tt j=sqrt(-1)} to use {\tt j} for the imaginary unit instead of {\tt i}.
+
+{\color{blue}
+\begin{verbatim}
+j = sqrt(-1)
+1/sqrt(-1)
+\end{verbatim}
+}
+
+\noindent
+$-j$
+
+\subsection*{laguerre($x,n,a$)}
+
+Returns the $n$th Laguerre polynomial in $x$.
+If argument $a$ is omitted then $a=0$ is used.
+
+{\color{blue}
+\begin{verbatim}
+laguerre(x,3)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle -\tfrac{1}{6}x^3+\tfrac{3}{2}x^2-3x+1$
+
+\subsection*{last}
+
+The result of the previous calculation is stored in {\tt last}.
+
+{\color{blue}
+\begin{verbatim}
+212^17
+\end{verbatim}
+}
+
+\noindent
+$3529471145760275132301897342055866171392$
+
+{\color{blue}
+\begin{verbatim}
+last^(1/17)
+\end{verbatim}
+}
+
+\noindent
+$212$
+
+\bigskip
+\noindent
+Symbol {\tt last} is an implied argument when a function has no argument list.
+
+{\color{blue}
+\begin{verbatim}
+212^17
+\end{verbatim}
+}
+
+\noindent
+$3529471145760275132301897342055866171392$
+
+{\color{blue}
+\begin{verbatim}
+float
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle 3.52947\times10^{39}$
+
+\subsection*{lcm($a,b,\ldots$)}
+
+Returns the least common multiple of expressions.
+
+{\color{blue}
+\begin{verbatim}
+lcm(x,x y)
+\end{verbatim}
+}
+
+\noindent
+$xy$
+
+\subsection*{leading($p,x$)}
+
+Returns the leading coefficient of polynomial $p(x)$.
+
+{\color{blue}
+\begin{verbatim}
+leading(3x^2 + 1,x)
+\end{verbatim}
+}
+
+\noindent
+$3$
+
+\subsection*{legendre($x,n,m$)}
+
+Returns the $n$th Legendre polynomial in $x$.
+If $m$ is omitted then $m=0$ is used.
+
+{\color{blue}
+\begin{verbatim}
+legendre(x,3)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle \tfrac{5}{2}x^3-\tfrac{3}{2}x$
+
+\subsection*{lisp($x$)}
+
+Evaluates expression $x$ and returns the result as a
+string in prefix notation.
+Useful for debugging scripts.
+
+{\color{blue}
+\begin{verbatim}
+lisp(x^2 + 1)
+\end{verbatim}
+}
+
+\noindent
+\verb$(+ (^ x 2) 1)$
+
+\subsection*{log($x$)}
+
+Returns the natural logarithm of $x$.
+
+{\color{blue}
+\begin{verbatim}
+log(x^y)
+\end{verbatim}
+}
+
+\noindent
+$y\log(x)$
+
+\subsection*{mag($z$)}
+
+Returns the magnitude of complex $z$.
+Function {\tt mag} treats undefined symbols as real while {\tt abs} does not.
+
+{\color{blue}
+\begin{verbatim}
+mag(x + i y)
+\end{verbatim}
+}
+
+\noindent
+$\displaystyle \left[x^2+y^2\right]^{1/2}$
+
+\subsection*{mod($a,b$)}
+
+Returns the remainder of integer $a$ divided by integer $b$.
+
+{\color{blue}
+\begin{verbatim}
+mod(10,7)
+\end{verbatim}
+}
+
+\noindent
+$3$
+
+\iffalse
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="not">not(<i>x</i>)</a>
+<p>
+Returns 0 if <i>x</i> is true (nonzero).
+Returns 1 otherwise.
+<pre style="color:blue">
+not(1=1)
+</pre>
+<pre>
+0
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="nroots">nroots(<i>p,x</i>)</a>
+<p>
+Returns all roots, both real and complex,
+of polynomial <i>p</i>(<i>x</i>).
+The roots are computed numerically.
+The coefficients of <i>p</i> can be real or complex.
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="number">number(<i>x</i>)</a>
+<p>
+Returns 1 if <i>x</i> is a rational or floating point number.
+Returns 0 otherwise.
+<pre style="color:blue">
+number(1/2)
+</pre>
+<pre>
+1
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="numerator">numerator(<i>x</i>)</a>
+<p>
+Returns the numerator of expression <i>x</i>.
+<pre style="color:blue">
+numerator(a/b)
+</pre>
+<pre>
+a
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="or">or(<i>a,b,...</i>)</a>
+<p>
+Returns 1 if at least one argument is true (nonzero).
+Returns 0 otherwise.
+<pre style="color:blue">
+or(1=1,2=2)
+</pre>
+<pre>
+1
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="outer">outer(<i>a,b,...</i>)</a>
+<p>
+Returns the outer product of tensors.
+Also known as the tensor product.
+<pre style="color:blue">
+A = (a,b,c)
+B = (x,y,z)
+outer(A,B)
+</pre>
+<pre>
+a x   a y   a z
+
+b x   b y   b z
+
+c x   c y   c z
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="pi">pi</a>
+<p>
+Symbol for &#960;.
+<pre style="color:blue">
+exp(i pi)
+</pre>
+<pre>
+-1
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="polar">polar(<i>z</i>)</a>
+<p>
+Returns complex <i>z</i> in polar form.
+<pre style="color:blue">
+polar(x - i y)
+</pre>
+<pre>
+         1/2
+  2    2
+(x  + y )    exp(i arctan(-y,x))
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="power">power</a>
+<p>
+Use <tt>^</tt> to raise something to a power.
+Use parentheses for negative powers.
+<pre style="color:blue">
+x^(-2)
+</pre>
+<pre>
+ 1
+----
+  2
+ x
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="prime">prime(<i>n</i>)</a>
+<p>
+Returns the <i>n</i>th prime number.
+The domain of <i>n</i> is 1 to 10000.
+<pre style="color:blue">
+prime(100)
+</pre>
+<pre>
+541
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="print">print(<i>a,b,...</i>)</a>
+<p>
+Evaluate expressions and print the results.
+Useful for printing from inside a <tt>for</tt> loop.
+<pre style="color:blue">
+for(j,1,3,print(j))
+</pre>
+<pre>
+j = 1
+j = 2
+j = 3
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="product">product(<i>i,j,k,f</i>)</a>
+<p>
+For <i>i</i> equals <i>j</i> through <i>k</i> evaluate <i>f</i>.
+Returns the product of all <i>f</i>.
+<pre style="color:blue">
+product(j,1,3,x + j)
+</pre>
+<pre>
+ 3      2
+x  + 6 x  + 11 x + 6
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="quote">quote(<i>x</i>)</a>
+<p>
+Returns expression <i>x</i> without evaluating it first.
+<pre style="color:blue">
+p = quote((x + 1)^2)
+binding(p)
+</pre>
+<pre>
+       2
+(x + 1)
+</pre>
+<pre style="color:blue">
+p = quote(p) -- clear symbol p
+binding(p)
+</pre>
+<pre>
+p
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="quotient">quotient(<i>p,q,x</i>)</a>
+<p>
+Returns the quotient of polynomial <i>p</i>(<i>x</i>) over <i>q</i>(<i>x</i>).
+<pre style="color:blue">
+p = x^2 + 1
+q = x + 3
+quotient(p,q,x)
+</pre>
+<pre>
+x - 3
+</pre>
+<pre style="color:blue">
+p - q quotient(p,q,x) -- remainder of p/q
+</pre>
+<pre>
+10
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="rank">rank(<i>a</i>)</a>
+<p>
+Returns the number of indices that tensor <i>a</i> has.
+<pre style="color:blue">
+A = ((1,0),(0,1))
+rank(outer(A,A,A))
+</pre>
+<pre>
+6
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="rationalize">rationalize(<i>x</i>)</a>
+<p>
+Returns expression <i>x</i> with everything over a common denominator.
+<pre style="color:blue">
+rationalize(1/a + 1/b + 1/2)
+</pre>
+<pre>
+ 2 a + a b + 2 b
+-----------------
+      2 a b
+</pre>
+<p>
+Note: Rationalize returns an unexpanded expression.
+If the result is assigned to a symbol,
+evaluating the symbol will expand the result.
+Use <tt>binding</tt> to retrieve the unexpanded expression.
+<pre style="color:blue">
+f = rationalize(1/a + 1/b + 1/2)
+binding(f)
+</pre>
+<pre>
+ 2 a + a b + 2 b
+-----------------
+      2 a b
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="real">real(<i>z</i>)</a>
+<p>
+Returns the real part of complex <i>z</i>.
+<pre style="color:blue">
+real(2 - 3i)
+</pre>
+<pre>
+2
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="rect">rect(<i>z</i>)</a>
+<p>
+Returns complex <i>z</i> in rectangular form.
+<pre style="color:blue">
+rect(exp(i x))
+</pre>
+<pre>
+cos(x) + i sin(x)
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="roots">roots(<i>p,x</i>)</a>
+<p>
+Returns the values of <i>x</i> such that polynomial
+<i>p</i>(<i>x</i>) equals zero.
+The polynomial should be factorable over integers.
+Returns a vector for multiple roots.
+<pre style="color:blue">
+roots(x^2 + 3x + 2,x)
+</pre>
+<pre>
+-2
+
+-1
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="run">run(<i>file</i>)</a>
+<p>
+Run script <i>file</i>.
+Useful for importing function libraries.
+<pre style="color:blue">
+run("Downloads/EVA.txt")
+</pre>
+<p>
+<i>file</i> must be in the Downloads folder due to security requirements for apps distributed on the Mac App Store.
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="simplify">simplify(<i>x</i>)</a>
+<p>
+Returns expression <i>x</i> in a simpler form.
+<pre style="color:blue">
+simplify(sin(x)^2 + cos(x)^2)
+</pre>
+<pre>
+1
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="sin">sin(<i>x</i>)</a>
+<p>
+Returns the sine of <i>x</i>.
+<pre style="color:blue">
+sin(pi/4)
+</pre>
+<pre>
+  1
+------
+  1/2
+ 2
+</pre>
+<pre style="color:blue">
+sin(arctan(y,x))
+</pre>
+<pre>
+      y
+--------------
+          1/2
+   2    2
+ (x  + y )
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="sinh">sinh(<i>x</i>)</a>
+<p>
+Returns the hyperbolic sine of <i>x</i>.
+<pre style="color:blue">
+circexp(sinh(x))
+</pre>
+<pre>
+   1             1
+- --- exp(-x) + --- exp(x)
+   2             2
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="sqrt">sqrt(<i>x</i>)</a>
+<p>
+Returns the square root of <i>x</i>.
+<pre style="color:blue">
+sqrt(10!)
+</pre>
+<pre>
+     1/2
+720 7
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="status">status</a>
+<p>
+Prints memory statistics.
+<pre style="color:blue">
+status
+</pre>
+<pre>
+block_count 1
+free_count 99258
+gc_count 1
+bignum_count 370
+string_count 0
+tensor_count 5
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="stop">stop</a>
+<p>
+In a script, it does what it says.
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="string">string(<i>x</i>)</a>
+<p>
+Evaluates expression <i>x</i> and returns the result as a string.
+Useful for testing scripts.
+<pre style="color:blue">
+string((x + 1)^2) == "x^2 + 2 x + 1"
+</pre>
+<pre>
+1
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="subst">subst(<i>a,b,c</i>)</a>
+<p>
+Substitutes <i>a</i> for <i>b</i> in <i>c</i> and returns the result.
+<pre style="color:blue">
+subst(x,y,y^2)
+</pre>
+<pre>
+ 2
+x
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="sum">sum(<i>i,j,k,f</i>)</a>
+<p>
+For <i>i</i> equals <i>j</i> through <i>k</i> evaluate <i>f</i>.
+Returns the sum of all <i>f</i>.
+<pre style="color:blue">
+sum(j,1,5,x^j)
+</pre>
+<pre>
+ 5    4    3    2
+x  + x  + x  + x  + x
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="tan">tan(<i>x</i>)</a>
+<p>
+Returns the tangent of <i>x</i>.
+<pre style="color:blue">
+simplify(tan(x) - sin(x)/cos(x))
+</pre>
+<pre>
+0
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="tanh">tanh(<i>x</i>)</a>
+<p>
+Returns the hyperbolic tangent of <i>x</i>.
+<pre style="color:blue">
+circexp(tanh(x))
+</pre>
+<pre>
+        1             exp(2 x)
+- -------------- + --------------
+   exp(2 x) + 1     exp(2 x) + 1
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="taylor">taylor(<i>f,x,n,a</i>)</a>
+<p>
+Returns the Taylor expansion of <i>f</i>(<i>x</i>) near <i>x</i> equals <i>a</i>.
+If argument <i>a</i> is omitted then zero is used.
+Argument <i>n</i> is the degree of the expansion.
+<pre style="color:blue">
+taylor(sin(x),x,5)
+</pre>
+<pre>
+  1    5    1   3
+----- x  - --- x  + x
+ 120        6
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="test">test(<i>a,b,c,d,...</i>)</a>
+<p>
+If argument <i>a</i> is true (nonzero) then <i>b</i> is returned,
+else if <i>c</i> is true then <i>d</i> is returned, etc.
+If the number of arguments is odd then the last argument is returned
+if all else fails.
+Use A=B or A==B to test for A equals B.
+<pre style="color:blue">
+A = 1
+B = 1
+test(A=B,"yes","no")
+</pre>
+<pre>
+yes
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="trace">trace</a>
+<p>
+Set <tt>trace=1</tt> in a script to print the script as it is evaluated.
+Useful for debugging.
+<pre style="color:blue">
+trace = 1
+</pre>
+<p>
+Note: The <tt>contract</tt> function is used to obtain the trace of a matrix.
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="transpose">transpose(<i>a,i,j</i>)</a>
+<p>
+Returns the transpose of tensor <i>a</i> with respect to indices <i>i</i> and <i>j</i>.
+If <i>i</i> and <i>j</i> are omitted then 1 and 2 are used.
+Hence a matrix can be transposed with a single argument.
+<pre style="color:blue">
+A = ((a,b),(c,d))
+transpose(A)
+</pre>
+<pre>
+a   c
+
+b   d
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="tty">tty</a>
+<p>
+Set <tt>tty=1</tt> to print results in a flat format.
+<pre style="color:blue">
+tty = 1
+(x + 1/2)^2
+</pre>
+<pre>
+x^2 + x + 1/4
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="unit">unit(<i>n</i>)</a>
+<p>
+Returns an <i>n</i> by <i>n</i> identity matrix.
+<pre style="color:blue">
+unit(3)
+</pre>
+<pre>
+1   0   0
+
+0   1   0
+
+0   0   1
+</pre>
+
+<p style="font-family:courier;font-size:20pt;font-weight:bold">
+<a name="zero">zero(<i>i,j,...</i>)</a>
+<p>
+Returns a null tensor with dimensions <i>i</i>, <i>j</i>, etc.
+Useful for creating a tensor and then setting the component values.
+<pre style="color:blue">
+A = zero(3,3)
+for(k,1,3,A[k,k]=k)
+A
+</pre>
+<pre>
+    1   0   0
+
+A = 0   2   0
+
+    0   0   3
+</pre>
+
+\fi
