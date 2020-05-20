@@ -27,7 +27,7 @@
 extern "C" { 
 	int stop_flag;
 	void run(char *);
-	void clear(void);
+	void eval_clear(void);
 	void printstr(const char *);
 }
 extern void draw_display(void);
@@ -397,7 +397,7 @@ MyRegisterClass(HINSTANCE hInstance)
 {
 	static WNDCLASSEX wcex;
 
-	clear();
+	eval_clear();
 
 	wcex.cbSize			= sizeof(WNDCLASSEX); 
 	wcex.style			= CS_HREDRAW | CS_VREDRAW;
@@ -2385,7 +2385,7 @@ run_script(void)
 	GetWindowText(edit_window, inp, len + 1);
 	goto_calc_mode();
 	deactivate_controls();
-	clear();
+	eval_clear();
 	update_display();
 	create_task();
 	update_curr_cmd("");

@@ -159,7 +159,7 @@ clear_term(void)
 	update_display_request = 1;
 }
 
-void
+extern "C" void
 eval_clear(void)
 {
 	if (test_flag == 0)

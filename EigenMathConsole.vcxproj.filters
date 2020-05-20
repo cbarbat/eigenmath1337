@@ -48,9 +48,6 @@
     <ClCompile Include="src\atomize.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\bake.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\besselj.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -112,9 +109,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\display.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\distill.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\divisors.c">
@@ -204,9 +198,6 @@
     <ClCompile Include="src\isprime.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\itab.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\laguerre.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -241,9 +232,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\outer.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\partition.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\polar.c">
@@ -328,9 +316,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\test.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\transform.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\transpose.c">

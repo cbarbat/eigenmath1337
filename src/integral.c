@@ -10,9 +10,9 @@ char *itab[] = {
 	"log(x)",
 	"1",
 
-	"x^a",
-	"x^(a + 1) / (a + 1)",
-	"test(a = -1,0,1)",
+	"x^a",			// integrand
+	"x^(a + 1) / (a + 1)",	// answer
+	"not(a = -1)",		// condition
 
 	"exp(a x)",
 	"exp(a x) / a",
@@ -712,14 +712,14 @@ eval_integral(void)
 
 #undef F
 #undef X
+#undef I
 #undef A
-#undef B
 #undef C
 
 #define F p3
 #define X p4
-#define A p5
-#define B p6
+#define I p5
+#define A p6
 #define C p7
 
 void
@@ -774,7 +774,7 @@ integral_of_form(void)
 	int h;
 	char **s;
 
-	// save bindings in case eval(B) calls integral
+	// save bindings in case eval(A) calls integral
 
 	save_binding(symbol(METAA));
 	save_binding(symbol(METAB));
@@ -799,24 +799,39 @@ integral_of_form(void)
 	for (;;) {
 
 		if (*s == NULL)
-			stop("integral could not find a solution");
+			stop("integral: could not find a solution");
 
-		scan(*s++, 1);
+		// integrand
+		if (pratt_flag) {
+			scan_with_pratt1(*s++);
+		} else {
+			scan1(*s++);
+		}
+		I = pop();
+
+		// answer
+		if (pratt_flag) {
+			scan_with_pratt1(*s++);
+		} else {
+			scan1(*s++);
+		}
 		A = pop();
 
-		scan(*s++, 1);
-		B = pop();
-
-		scan(*s++, 1);
+		// condition
+		if (pratt_flag) {
+			scan_with_pratt1(*s++);
+		} else {
+			scan1(*s++);
+		}
 		C = pop();
 
-		if (f_equals_a(h))
+		if (find_integral(h))
 			break;
 	}
 
 	tos = h; // pop all
 
-	push(B);
+	push(A); // answer
 	eval();
 
 	restore_binding(symbol(METAX));
@@ -824,23 +839,23 @@ integral_of_form(void)
 	restore_binding(symbol(METAA));
 }
 
-// search for a METAA and METAB such that F = A
+// find constants such that F = I
 
 int
-f_equals_a(int h)
+find_integral(int h)
 {
 	int i, j;
 	for (i = h; i < tos; i++) {
 		set_binding(symbol(METAA), stack[i]);
 		for (j = h; j < tos; j++) {
 			set_binding(symbol(METAB), stack[j]);
-			push(C);			// are conditions ok?
+			push(C);			// condition ok?
 			eval();
 			p1 = pop();
 			if (iszero(p1))
 				continue;		// no, go to next j
-			push(F);			// F = A?
-			push(A);
+			push(F);			// F = I?
+			push(I);
 			eval();
 			subtract();
 			p1 = pop();
@@ -907,7 +922,6 @@ decomp_sum(void)
 	// decomp terms involving x
 
 	p3 = cdr(p1);
-
 	while (iscons(p3)) {
 		if (find(car(p3), p2)) {
 			push(car(p3));
@@ -920,11 +934,9 @@ decomp_sum(void)
 	// add together all constant terms
 
 	h = tos;
-
 	p3 = cdr(p1);
-
 	while (iscons(p3)) {
-		if (find(car(p3), p2) == 0)
+		if (!find(car(p3), p2))
 			push(car(p3));
 		p3 = cdr(p3);
 	}
@@ -946,7 +958,6 @@ decomp_product(void)
 	// decomp factors involving x
 
 	p3 = cdr(p1);
-
 	while (iscons(p3)) {
 		if (find(car(p3), p2)) {
 			push(car(p3));
@@ -959,11 +970,9 @@ decomp_product(void)
 	// multiply together all constant factors
 
 	h = tos;
-
 	p3 = cdr(p1);
-
 	while (iscons(p3)) {
-		if (find(car(p3), p2) == 0)
+		if (!find(car(p3), p2))
 			push(car(p3));
 		p3 = cdr(p3);
 	}
@@ -972,7 +981,7 @@ decomp_product(void)
 		multiply_factors(tos - h);
 }
 
-// for example,  exp(a x + b x)  ->  exp((a + b) x)
+// for example, exp(a x + b x) -> exp((a + b) x)
 
 void
 collect_coeffs(void)

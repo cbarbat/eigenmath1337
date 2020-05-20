@@ -77,10 +77,24 @@ struct token_info sym_table[MAX_SYM + 1] = { // stores the nuds and leds
 };
 
 char *
-scan_with_pratt(char * s, int mode)
+scan_with_pratt(char *s)
+{
+	scan_mode = 0;
+	return scan_with_pratt_nib(s);
+}
+
+char *
+scan_with_pratt1(char *s)
+{
+	scan_mode = 1; // mode for table of integrals
+	return scan_with_pratt_nib(s);
+}
+
+
+char *
+scan_with_pratt_nib(char * s)
 {
 	scan_str = s;
-	scan_mode = mode;
 	scan_level = 0;
 	get_token_skip_newlines2();
 	if (token == T_END)

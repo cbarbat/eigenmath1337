@@ -142,7 +142,6 @@
     <ClCompile Include="src\arctanh.c" />
     <ClCompile Include="src\arg.c" />
     <ClCompile Include="src\atomize.c" />
-    <ClCompile Include="src\bake.c" />
     <ClCompile Include="src\besselj.c" />
     <ClCompile Include="src\bessely.c" />
     <ClCompile Include="src\bignum.c" />
@@ -164,7 +163,6 @@
     <ClCompile Include="src\derivative.c" />
     <ClCompile Include="src\det.c" />
     <ClCompile Include="src\display.c" />
-    <ClCompile Include="src\distill.c" />
     <ClCompile Include="src\divisors.c" />
     <ClCompile Include="src\eigen.c" />
     <ClCompile Include="src\erf.c" />
@@ -194,7 +192,6 @@
     <ClCompile Include="src\inv.c" />
     <ClCompile Include="src\is.c" />
     <ClCompile Include="src\isprime.c" />
-    <ClCompile Include="src\itab.c" />
     <ClCompile Include="src\laguerre.c" />
     <ClCompile Include="src\latex.c" />
     <ClCompile Include="src\lcm.c" />
@@ -210,7 +207,6 @@
     <ClCompile Include="src\nroots.c" />
     <ClCompile Include="src\numerator.c" />
     <ClCompile Include="src\outer.c" />
-    <ClCompile Include="src\partition.c" />
     <ClCompile Include="src\polar.c" />
     <ClCompile Include="src\pollard.c" />
     <ClCompile Include="src\power.c" />
@@ -240,7 +236,6 @@
     <ClCompile Include="src\taylor.c" />
     <ClCompile Include="src\tensor.c" />
     <ClCompile Include="src\test.c" />
-    <ClCompile Include="src\transform.c" />
     <ClCompile Include="src\transpose.c" />
     <ClCompile Include="src\userfunc.c" />
     <ClCompile Include="src\zero.c" />

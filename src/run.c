@@ -17,9 +17,9 @@ run(char *s)
 	for (;;) {
 
 		if (pratt_flag) {
-			s = scan_with_pratt(s, 0);
+			s = scan_with_pratt(s);
 		} else {
-			s = scan(s, 0);
+			s = scan(s);
 		}
 
 		if (s == NULL)
@@ -31,7 +31,6 @@ run(char *s)
 
 		if (tos || tof)
 			stop("internal error 1");
-
 
 		if (clear_flag)
 			init(1);
@@ -125,9 +124,9 @@ init(int level)
 
 	for (i = 0; i < n; i++) {
 		if (pratt_flag) {
-			scan_with_pratt(init_script[i], 0);
+			scan_with_pratt(init_script[i]);
 		} else {
-			scan(init_script[i], 0);
+			scan(init_script[i]);
 		}
 		eval();
 		pop();
@@ -284,7 +283,11 @@ run_file(char *filename)
 
 	while (1) {
 
-		s = scan(s, 0);
+		if (pratt_flag) {
+			s = scan_with_pratt(s);
+		} else {
+			s = scan(s);
+		}
 
 		if (s == NULL)
 			break; // end of input
