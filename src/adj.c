@@ -11,30 +11,43 @@ eval_adj(void)
 void
 adj(void)
 {
-	int i, j, n;
-
 	save();
+	adj_nib();
+	restore();
+}
+
+void
+adj_nib(void)
+{
+	int i, j, n;
 
 	p1 = pop();
 
 	if (!istensor(p1) || p1->u.tensor->ndim != 2 || p1->u.tensor->dim[0] != p1->u.tensor->dim[1])
-		stop("square matrix expected");
+		stop("adj: square matrix expected");
 
 	n = p1->u.tensor->dim[0];
 
-	// p2 is for computing cofactors
-
-	p2 = alloc_tensor((n - 1) * (n - 1));
-	p2->u.tensor->ndim = 2;
-	p2->u.tensor->dim[0] = n - 1;
-	p2->u.tensor->dim[1] = n - 1;
-
 	// p3 is the adjunct matrix
 
-	p3 = alloc_tensor(n * n);
-	p3->u.tensor->ndim = 2;
-	p3->u.tensor->dim[0] = n;
-	p3->u.tensor->dim[1] = n;
+	p3 = alloc_matrix(n, n);
+
+	if (n == 2) {
+		p3->u.tensor->elem[0] = p1->u.tensor->elem[3];
+		p3->u.tensor->elem[3] = p1->u.tensor->elem[0];
+		push(p1->u.tensor->elem[1]);
+		negate();
+		p3->u.tensor->elem[1] = pop();
+		push(p1->u.tensor->elem[2]);
+		negate();
+		p3->u.tensor->elem[2] = pop();
+		push(p3);
+		return;
+	}
+
+	// p2 is for computing cofactors
+
+	p2 = alloc_matrix(n - 1, n - 1);
 
 	for (i = 0; i < n; i++)
 		for (j = 0; j < n; j++) {
@@ -43,8 +56,6 @@ adj(void)
 		}
 
 	push(p3);
-
-	restore();
 }
 
 void
