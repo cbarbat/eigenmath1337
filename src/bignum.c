@@ -21,8 +21,8 @@ push_rational(int a, int b)
 void
 push_rational_number(int sign, uint32_t *a, uint32_t *b)
 {
-	struct atom *p; // ok, no gc before push
-	if (stop_flag) {
+	struct atom *p;
+	if (stop_flag) { // alloc() will check stop_flag, check now to avoid memory leak
 		mfree(a);
 		mfree(b);
 		stop(NULL);
@@ -34,7 +34,7 @@ push_rational_number(int sign, uint32_t *a, uint32_t *b)
 			b = mint(1);
 		}
 	}
-	p = alloc(); // might stop, that's why stop_flag was checked above
+	p = alloc();
 	p->k = RATIONAL;
 	p->sign = sign;
 	p->u.q.a = a;
@@ -166,6 +166,68 @@ convert_rational_to_double(struct atom *p)
 		a = -a;
 
 	return a / b;
+}
+
+void
+convert_double_to_rational(double d)
+{
+	int n;
+	char *s;
+	if (d == 0.0) {
+		push(zero);
+		return;
+	}
+	if (!isnormal(d))
+		stop("cannot convert non-normal floating point to rational number");
+	sprintf(tbuf, "%e", fabs(d));
+	s = tbuf + 2; // skip first digit and decimal point
+	while (isdigit(*s))
+		s++;
+	s++; // skip 'e' or 'E'
+	n = atoi(s) + 1;
+	best_rational_approximation(fabs(d) / pow(10.0, (double) n));
+	push_integer(10);
+	push_integer(n);
+	power();
+	multiply();
+	if (d < 0.0)
+		negate();
+}
+
+#undef N
+#define N 1000
+
+void
+best_rational_approximation(double x)
+{
+	int a = 0, b = 1, c = 1, d = 1;
+	double m;
+	for (;;) {
+		m = (double) (a + c) / (double) (b + d);
+		if (m == x)
+			break;
+		if (x < m) {
+			c += a;
+			d += b;
+			if (d > N) {
+				push_rational(a, b);
+				return;
+			}
+		} else {
+			a += c;
+			b += d;
+			if (b > N) {
+				push_rational(c, d);
+				return;
+			}
+		}
+	}
+	if (b + d <= N)
+		push_rational(a + c, b + d);
+	else if (d > b)
+		push_rational(c, d); // largest denominator is most accurate
+	else
+		push_rational(a, b);
 }
 
 void

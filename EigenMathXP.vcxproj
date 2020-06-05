@@ -172,7 +172,6 @@
     <ClCompile Include="src\denominator.c" />
     <ClCompile Include="src\derivative.c" />
     <ClCompile Include="src\det.c" />
-    <ClCompile Include="src\divisors.c" />
     <ClCompile Include="src\eigen.c" />
     <ClCompile Include="src\erf.c" />
     <ClCompile Include="src\erfc.c" />

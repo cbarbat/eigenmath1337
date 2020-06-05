@@ -245,9 +245,6 @@
     <ClCompile Include="src\eigen.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\divisors.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\det.c">
       <Filter>Source Files</Filter>
     </ClCompile>

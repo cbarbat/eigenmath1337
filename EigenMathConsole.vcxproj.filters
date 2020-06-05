@@ -111,9 +111,6 @@
     <ClCompile Include="src\display.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\divisors.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\eigen.c">
       <Filter>Source Files</Filter>
     </ClCompile>
