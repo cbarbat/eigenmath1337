@@ -1,20 +1,19 @@
 #include "defs.h"
 
-char *trace_ptr;
-char *trace_ptr0;
+char *trace1;
+char *trace2;
 
 void
 run(char *s)
 {
-	trace_ptr = s;
-	trace_ptr0 = s;
-
 	if (setjmp(stop_return))
 		return;
 
 	init(0);
 
 	for (;;) {
+
+		trace1 = s;
 
 		if (pratt_flag) {
 			s = scan_with_pratt(s);
@@ -25,7 +24,9 @@ run(char *s)
 		if (s == NULL)
 			break; // end of input
 
-		trace_input(s);
+		trace2 = s;
+
+		trace_input();
 
 		eval_and_print_result(1);
 
@@ -43,17 +44,11 @@ stop(char *s)
 	if (draw_flag == 2)
 		longjmp(draw_stop_return, 1);
 
-	trace_error(); // print line on which error occurred
-
-	if (s == NULL)
-		printbuf("Stop\n", RED);
-	else {
-		outbuf_index = 0;
-		print_str("Stop: ");
-		print_str(s);
-		print_char('\n');
-		print_char('\0');
-		printbuf(outbuf, RED);
+	if (s) {
+		print_input_line();
+		printbuf("Stop: ", RED);
+		printbuf(s, RED);
+		printbuf("\n", RED);
 	}
 
 	longjmp(stop_return, 1);
@@ -79,10 +74,10 @@ init(int level)
 {
 	int i, n;
 
-	stop_flag = 0;
+	expanding = 1;
+	interrupt = 0;
 	draw_flag = 0;
 	clear_flag = 0;
-	expanding = 1;
 
 	tos = 0;
 	tof = 0;
@@ -170,55 +165,6 @@ print_status(void)
 }
 
 void
-trace_input(char *s)
-{
-	int c;
-	char *t;
-
-	trace_ptr0 = trace_ptr;
-
-	while (*trace_ptr && trace_ptr < s) {
-		// advance to next line
-		do
-			trace_ptr++;
-		while (*trace_ptr && trace_ptr[-1] != '\n');
-	}
-
-	if (iszero(binding[TRACE]))
-		return;
-
-	outbuf_index = 0;
-
-	c = 0;
-
-	t = trace_ptr0;
-
-	while (t < trace_ptr) {
-		c = *t++;
-		print_char(c);
-	}
-
-	if (c != '\n')
-		print_char('\n');
-
-	print_char('\0');
-
-	printbuf(outbuf, BLUE);
-}
-
-void
-trace_error(void)
-{
-	char *s;
-	if (iszero(binding[TRACE])) {
-		binding[TRACE] = one;
-		s = trace_ptr;
-		trace_ptr = trace_ptr0;
-		trace_input(s);
-	}
-}
-
-void
 eval_run(void)
 {
 	push(cadr(p1));
@@ -237,7 +183,7 @@ void
 run_file(char *filename)
 {
 	int fd, n;
-	char *buf, *ptr, *ptr0, *s;
+	char *buf, *s, *t1, *t2;
 
 	fd = open(filename, O_RDONLY, 0);
 
@@ -275,13 +221,12 @@ run_file(char *filename)
 
 	s = buf;
 
-	ptr = trace_ptr;
-	ptr0 = trace_ptr0;
-
-	trace_ptr = s;
-	trace_ptr0 = s;
+	t1 = trace1;
+	t2 = trace2;
 
 	while (1) {
+
+		trace1 = s;
 
 		if (pratt_flag) {
 			s = scan_with_pratt(s);
@@ -292,7 +237,9 @@ run_file(char *filename)
 		if (s == NULL)
 			break; // end of input
 
-		trace_input(s);
+		trace2 = s;
+
+		trace_input();
 
 		eval_and_print_result(1);
 
@@ -300,8 +247,58 @@ run_file(char *filename)
 			stop("clear not allowed in run file");
 	}
 
-	trace_ptr = ptr;
-	trace_ptr0 = ptr0;
+	trace1 = t1;
+	trace2 = t2;
 
-	pop(); // pop string
+	pop(); // pop buffer
 }
+
+void
+trace_input(void)
+{
+	char c, *s;
+	if (iszero(binding[TRACE]))
+		return;
+	c = 0;
+	s = trace1;
+	outbuf_index = 0;
+	while (*s && s < trace2) {
+		c = *s++;
+		print_char(c);
+	}
+	if (c != '\n')
+		print_char('\n');
+	print_char('\0');
+	printbuf(outbuf, BLUE);
+}
+
+// suppress blank lines
+
+void
+print_input_line(void)
+{
+	char c, *s;
+	c = '\n';
+	s = trace1;
+	outbuf_index = 0;
+	while (*s && s < trace2) {
+		if (*s == '\n' && c == '\n') {
+			s++;
+			continue;
+		}
+		c = *s++;
+		print_char(c);
+	}
+	if (c != '\n')
+		print_char('\n');
+	print_char('\0');
+	printbuf(outbuf, RED);
+}
+
+void
+print_scan_line(char *s)
+{
+	trace2 = s;
+	print_input_line();
+}
+

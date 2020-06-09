@@ -510,7 +510,7 @@ get_token_nib2(void)
 			while (isdigit( * scan_str))
 				scan_str++;
 			if (token_str + 1 == scan_str)
-				scan_error2("expected decimal"); // only a decimal point
+				scan_error2("expected decimal digit"); // only a decimal point
 			token = T_DOUBLE;
 		} else
 			token = T_INTEGER;
@@ -536,8 +536,10 @@ get_token_nib2(void)
 	if ( * scan_str == '"') {
 		scan_str++;
 		while ( * scan_str != '"') {
-			if (* scan_str == '\0' || *scan_str == '\n')
+			if (*scan_str == '\0' || *scan_str == '\n') {
+				token_str = scan_str;
 				scan_error2("runaway string");
+			}
 			scan_str++;
 		}
 		scan_str++;
@@ -602,14 +604,16 @@ update_token_buf2(char *a, char *b)
 void
 scan_error2(char *errmsg)
 {
-	trace_input(scan_str);
-	trace_error(); // print line on which error occurred
+	print_scan_line(scan_str);
 	outbuf_index = 0;
-	print_str("Input error at '");
-	while (*token_str && token_str < scan_str)
-		print_char(*token_str++);
-	print_str("', ");
+	print_str("Stop: Syntax error, ");
 	print_str(errmsg);
+	if (token_str < scan_str) {
+		print_str(" instead of '");
+		while (*token_str && token_str < scan_str)
+			print_char(*token_str++);
+		print_str("'");
+	}
 	print_char('\n');
 	print_char('\0');
 	printbuf(outbuf, RED);
