@@ -13,47 +13,72 @@ eval_mod(void)
 void
 mod(void)
 {
-	int n;
-
 	save();
+	mod_nib();
+	restore();
+}
 
+void
+mod_nib(void)
+{
 	p2 = pop();
 	p1 = pop();
 
 	if (iszero(p2))
-		stop("divide by zero");
+		stop("mod: divide by zero");
 
-	if (!isnum(p1) || !isnum(p2)) {
-		push_symbol(MOD);
-		push(p1);
-		push(p2);
-		list(3);
-		restore();
+	if (isnum(p1) && isnum(p2)) {
+		mod_numbers();
 		return;
 	}
 
-	if (isdouble(p1)) {
-		push(p1);
-		n = pop_integer();
-		if (n == ERR)
-			stop("mod function: cannot convert float value to integer");
-		push_integer(n);
-		p1 = pop();
+	push_symbol(MOD);
+	push(p1);
+	push(p2);
+	list(3);
+}
+
+void
+mod_numbers(void)
+{
+	double d1, d2;
+
+	if (isrational(p1) && isrational(p2)) {
+		mod_rationals();
+		return;
 	}
 
-	if (isdouble(p2)) {
-		push(p2);
-		n = pop_integer();
-		if (n == ERR)
-			stop("mod function: cannot convert float value to integer");
-		push_integer(n);
-		p2 = pop();
+	push(p1);
+	d1 = pop_double();
+
+	push(p2);
+	d2 = pop_double();
+
+	push_double(fmod(d1, d2));
+}
+
+void
+mod_rationals(void)
+{
+	uint32_t *a, *b, *q;
+
+	if (isinteger(p1) && isinteger(p2)) {
+		push_rational_number(p1->sign, mmod(p1->u.q.a, p2->u.q.a), mint(1));
+		return;
 	}
 
-	if (!isinteger(p1) || !isinteger(p2))
-		stop("mod function: integer arguments expected");
+	a = mmul(p1->u.q.a, p2->u.q.b);
+	b = mmul(p1->u.q.b, p2->u.q.a);
 
-	push_rational_number(p1->sign, mmod(p1->u.q.a, p2->u.q.a), mint(1));
+	q = mdiv(a, b);
 
-	restore();
+	mfree(a);
+	mfree(b);
+
+	push(p1);
+	push_rational_number(p1->sign, q, mint(1));
+	push(p2);
+	absval();
+	multiply();
+	subtract();
 }
