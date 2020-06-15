@@ -512,6 +512,14 @@ $\displaystyle \begin{bmatrix}-4\\ \tfrac{9}{2}\end{bmatrix}$
 Draws a graph of $f(x)$.
 Drawing ranges can be set with {\tt xrange} and {\tt yrange}.
 
+{\color{blue}
+\begin{verbatim}
+xrange = (0,1)
+yrange = (0,1)
+draw(x^2,x)
+\end{verbatim}
+}
+
 \subsection*{e}
 
 Symbol {\tt e} is initialized to the natural number $e=\exp(1)$.
@@ -1574,6 +1582,16 @@ yes
 
 Set {\tt trace=1} in a script to print the script as it is evaluated.
 Useful for debugging.
+
+{\color{blue}
+\begin{verbatim}
+trace = 1
+\end{verbatim}
+}
+
+\noindent
+Note:
+The \verb$contract$ function is used to obtain the trace of a matrix.
 
 \subsection*{transpose($a,i,j$)}
 
