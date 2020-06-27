@@ -272,13 +272,8 @@ power_tensor(void)
 	}
 
 	if (n == 0) {
-		if (p1->u.tensor->ndim != 2)
-			stop("power(tensor,0) with tensor rank not equal to 2");
 		n = p1->u.tensor->dim[0];
-		p1 = alloc_tensor(n * n);
-		p1->u.tensor->ndim = 2;
-		p1->u.tensor->dim[0] = n;
-		p1->u.tensor->dim[1] = n;
+		p1 = alloc_matrix(n, n);
 		for (i = 0; i < n; i++)
 			p1->u.tensor->elem[n * i + i] = one;
 		push(p1);
@@ -297,8 +292,6 @@ power_tensor(void)
 	for (i = 1; i < n; i++) {
 		push(p1);
 		inner();
-		if (iszero(stack[tos - 1]))
-			break;
 	}
 }
 
@@ -404,4 +397,84 @@ compatible(struct atom *p, struct atom *q)
 			return 0;
 
 	return 1;
+}
+
+void
+eval_dim(void)
+{
+	int n;
+	push(cadr(p1));
+	eval();
+	p2 = pop();
+	if (iscons(cddr(p1))) {
+		push(caddr(p1));
+		eval();
+		n = pop_integer();
+	} else
+		n = 1;
+	if (!istensor(p2))
+		push_integer(1); // dim of scalar is 1
+	else if (n < 1 || n > p2->u.tensor->ndim)
+		push(p1);
+	else
+		push_integer(p2->u.tensor->dim[n - 1]);
+}
+
+void
+eval_rank(void)
+{
+	push(cadr(p1));
+	eval();
+	p1 = pop();
+	if (istensor(p1))
+		push_integer(p1->u.tensor->ndim);
+	else
+		push_integer(0);
+}
+
+void
+eval_unit(void)
+{
+	int i, n;
+	push(cadr(p1));
+	eval();
+	n = pop_integer();
+	if (n < 2) {
+		push(p1);
+		return;
+	}
+	p1 = alloc_matrix(n, n);
+	for (i = 0; i < n; i++)
+		p1->u.tensor->elem[n * i + i] = one;
+	push(p1);
+}
+
+void
+eval_zero(void)
+{
+	int dim[MAXDIM], i, m, n;
+	m = 1;
+	n = 0;
+	p1 = cdr(p1);
+	while (iscons(p1)) {
+		if (n == MAXDIM)
+			stop("zero: rank exceeds max");
+		push(car(p1));
+		eval();
+		i = pop_integer();
+		if (i == ERR || i < 2)
+			stop("zero: dimension error");
+		m *= i;
+		dim[n++] = i;
+		p1 = cdr(p1);
+	}
+	if (n == 0) {
+		push_integer(0);
+		return;
+	}
+	p1 = alloc_tensor(m);
+	p1->u.tensor->ndim = n;
+	for (i = 0; i < n; i++)
+		p1->u.tensor->dim[i] = dim[i];
+	push(p1);
 }
