@@ -13,47 +13,18 @@ run(char *s)
 
 	for (;;) {
 
-		trace1 = s;
-
-		if (pratt_flag) {
-			s = scan_with_pratt(s);
-		} else {
-			s = scan(s);
-		}
+		s = scan_input(s);
 
 		if (s == NULL)
 			break; // end of input
 
-		trace2 = s;
-
-		trace_input();
-
-		eval_and_print_result(1);
-
-		if (tos || tof)
-			stop("internal error 1");
+		eval_and_print_result();
 
 		if (clear_flag) {
 			zero = NULL; // force full init
 			init();
 		}
 	}
-}
-
-void
-stop(char *s)
-{
-	if (draw_flag == 2)
-		longjmp(draw_stop_return, 1);
-
-	if (s) {
-		print_input_line();
-		printbuf("Stop: ", RED);
-		printbuf(s, RED);
-		printbuf("\n", RED);
-	}
-
-	longjmp(stop_return, 1);
 }
 
 char *init_script[] = {
@@ -125,38 +96,56 @@ init(void)
 	gc();
 }
 
-void
-print_status(void)
+char *
+scan_input(char *s)
 {
-	outbuf_index = 0;
+	trace1 = s;
+	if (pratt_flag) {
+		s = scan_with_pratt(s);
+	} else {
+		s = scan(s);
+	}
+	if (s) {
+		trace2 = s;
+		trace_input();
+	}
+	return s;
+}
 
-	sprintf(tbuf, "block_count %d\n", block_count);
-	print_str(tbuf);
+void
+eval_and_print_result(void)
+{
+	save();
 
-	sprintf(tbuf, "free_count %d\n", free_count);
-	print_str(tbuf);
+	p1 = pop();
+	push(p1);
+	eval();
+	p2 = pop();
 
-	sprintf(tbuf, "gc_count %d\n", gc_count);
-	print_str(tbuf);
+	push(p1);
+	push(p2);
+	print_result();
 
-	sprintf(tbuf, "bignum_count %d\n", bignum_count);
-	print_str(tbuf);
+	if (p2 != symbol(NIL))
+		binding[LAST] = p2;
 
-	sprintf(tbuf, "string_count %d\n", string_count);
-	print_str(tbuf);
+	restore();
+}
 
-	sprintf(tbuf, "tensor_count %d\n", tensor_count);
-	print_str(tbuf);
+void
+stop(char *s)
+{
+	if (draw_flag == 2)
+		longjmp(draw_stop_return, 1);
 
-	sprintf(tbuf, "max_stack %d (%d%%)\n", max_stack, 100 * max_stack / STACKSIZE);
-	print_str(tbuf);
+	if (s) {
+		print_input_line();
+		printbuf("Stop: ", RED);
+		printbuf(s, RED);
+		printbuf("\n", RED);
+	}
 
-	sprintf(tbuf, "max_frame %d (%d%%)\n", max_frame, 100 * max_frame / FRAMESIZE);
-	print_str(tbuf);
-
-	print_char('\0');
-
-	printbuf(outbuf, BLACK);
+	longjmp(stop_return, 1);
 }
 
 void
@@ -167,7 +156,7 @@ eval_run(void)
 	p1 = pop();
 
 	if (!isstr(p1))
-		stop("string expected");
+		stop("run: file name expected");
 
 	run_file(p1->u.str);
 
@@ -183,7 +172,7 @@ run_file(char *filename)
 	fd = open(filename, O_RDONLY, 0);
 
 	if (fd == -1)
-		stop("cannot open file");
+		stop("run: cannot open file");
 
 	// get file size
 
@@ -191,7 +180,7 @@ run_file(char *filename)
 
 	if (n < 0) {
 		close(fd);
-		stop("lseek error");
+		stop("run: lseek error");
 	}
 
 	lseek(fd, 0, SEEK_SET);
@@ -207,7 +196,7 @@ run_file(char *filename)
 
 	if (read(fd, buf, n) != n) {
 		close(fd);
-		stop("read error");
+		stop("run: read error");
 	}
 
 	close(fd);
@@ -219,33 +208,23 @@ run_file(char *filename)
 	t1 = trace1;
 	t2 = trace2;
 
-	while (1) {
+	for (;;) {
 
-		trace1 = s;
-
-		if (pratt_flag) {
-			s = scan_with_pratt(s);
-		} else {
-			s = scan(s);
-		}
+		s = scan_input(s);
 
 		if (s == NULL)
 			break; // end of input
 
-		trace2 = s;
-
-		trace_input();
-
-		eval_and_print_result(1);
+		eval_and_print_result();
 
 		if (clear_flag)
-			stop("clear not allowed in run file");
+			stop("run: clear not allowed in run file");
 	}
 
 	trace1 = t1;
 	trace2 = t2;
 
-	pop(); // pop buffer
+	pop(); // pop file buffer
 }
 
 void
@@ -295,4 +274,40 @@ print_scan_line(char *s)
 {
 	trace2 = s;
 	print_input_line();
+}
+
+void
+eval_status(void)
+{
+	outbuf_index = 0;
+
+	sprintf(tbuf, "block_count %d\n", block_count);
+	print_str(tbuf);
+
+	sprintf(tbuf, "free_count %d\n", free_count);
+	print_str(tbuf);
+
+	sprintf(tbuf, "gc_count %d\n", gc_count);
+	print_str(tbuf);
+
+	sprintf(tbuf, "bignum_count %d\n", bignum_count);
+	print_str(tbuf);
+
+	sprintf(tbuf, "string_count %d\n", string_count);
+	print_str(tbuf);
+
+	sprintf(tbuf, "tensor_count %d\n", tensor_count);
+	print_str(tbuf);
+
+	sprintf(tbuf, "max_stack %d (%d%%)\n", max_stack, 100 * max_stack / STACKSIZE);
+	print_str(tbuf);
+
+	sprintf(tbuf, "max_frame %d (%d%%)\n", max_frame, 100 * max_frame / FRAMESIZE);
+	print_str(tbuf);
+
+	print_char('\0');
+
+	printbuf(outbuf, BLACK);
+
+	push_symbol(NIL);
 }
