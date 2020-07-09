@@ -250,7 +250,6 @@
     <ClCompile Include="src\windows\history.cpp" />
     <ClCompile Include="src\windows\MainXP.cpp" />
     <ClCompile Include="src\windows\window.cpp" />
-    <ClCompile Include="src\zero.c" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="src\windows\EigenMath.rc" />

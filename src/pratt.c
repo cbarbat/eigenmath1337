@@ -144,11 +144,11 @@ nud_atom(void)
 					push(symbol(METAX));
 					break;
 				default:
-					push(usr_symbol(ptoken_buf));
+					push(lookup(ptoken_buf));
 					break;
 				}
 			else
-				push(usr_symbol(ptoken_buf));
+				push(lookup(ptoken_buf));
 			break;
 	}
 }
@@ -158,7 +158,7 @@ nud_func(void)
 {
 	int n = 1;
 	struct atom * p;
-	p = usr_symbol(token_buf);
+	p = lookup(token_buf);
 	push(p);
 	get_token2(); // after left paren
 	if (token != ')') {

@@ -321,9 +321,6 @@
     <ClCompile Include="src\userfunc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\zero.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\pratt.c">
       <Filter>Source Files</Filter>
     </ClCompile>

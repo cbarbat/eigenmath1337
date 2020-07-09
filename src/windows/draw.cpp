@@ -17,7 +17,7 @@ extern struct text_metric text_metric[11];
 #define DRAW_POINT 24
 #define DRAW_BOX 25
 
-#define DIM 300
+#define DIM_G 300
 
 #define F p3
 #define T p4
@@ -156,12 +156,12 @@ new_point(double t)
 	push(XT);
 	x = pop_double();
 	x = (x - xmin) / (xmax - xmin);
-	x = (double) DIM * x + 0.5; // map 0-1 to 0-DIM, +0.5 so draw(x^3) looks right
+	x = (double) DIM_G * x + 0.5; // map 0-1 to 0-DIM_G, +0.5 so draw(x^3) looks right
 
 	push(YT);
 	y = pop_double();
 	y = (y - ymin) / (ymax - ymin);
-	y = (double) DIM * y + 0.5; // map 0-1 to 0-DIM, +0.5 so draw(x^3) looks right
+	y = (double) DIM_G * y + 0.5; // map 0-1 to 0-DIM_G, +0.5 so draw(x^3) looks right
 
 	if (x < -10000.0)
 		x = -10000.0;
@@ -233,7 +233,7 @@ eval_f(double t)
 
 	push(F);
 	eval();
-	float_expr();
+	sfloat();
 	eval();
 
 	restore();
@@ -304,7 +304,7 @@ setup_trange_f(void)
 
 	tmax = M_PI;
 
-	p1 = usr_symbol("trange");
+	p1 = lookup("trange");
 
 	if (!issymbol(p1))
 		return;
@@ -318,13 +318,13 @@ setup_trange_f(void)
 
 	push(p1->u.tensor->elem[0]);
 	eval();
-	float_expr();
+	sfloat();
 	eval();
 	p2 = pop();
 
 	push(p1->u.tensor->elem[1]);
 	eval();
-	float_expr();
+	sfloat();
 	eval();
 	p3 = pop();
 
@@ -358,7 +358,7 @@ setup_xrange_f(void)
 
 	xmax = 10.0;
 
-	p1 = usr_symbol("xrange");
+	p1 = lookup("xrange");
 
 	if (!issymbol(p1))
 		return;
@@ -372,13 +372,13 @@ setup_xrange_f(void)
 
 	push(p1->u.tensor->elem[0]);
 	eval();
-	float_expr();
+	sfloat();
 	eval();
 	p2 = pop();
 
 	push(p1->u.tensor->elem[1]);
 	eval();
-	float_expr();
+	sfloat();
 	eval();
 	p3 = pop();
 
@@ -440,7 +440,7 @@ setup_yrange_f(void)
 
 	ymax = 10.0;
 
-	p1 = usr_symbol("yrange");
+	p1 = lookup("yrange");
 
 	if (!issymbol(p1))
 		return;
@@ -454,13 +454,13 @@ setup_yrange_f(void)
 
 	push(p1->u.tensor->elem[0]);
 	eval();
-	float_expr();
+	sfloat();
 	eval();
 	p2 = pop();
 
 	push(p1->u.tensor->elem[1]);
 	eval();
-	float_expr();
+	sfloat();
 	eval();
 	p3 = pop();
 
@@ -509,13 +509,13 @@ emit_graph(void)
 
 	buf = (unsigned char *) malloc(len);
 
-	h = DIM + SHIM + text_metric[SMALL_FONT].ascent + text_metric[SMALL_FONT].descent;
+	h = DIM_G + SHIM + text_metric[SMALL_FONT].ascent + text_metric[SMALL_FONT].descent;
 
 	//buf[0] = (unsigned char) (h >> 8);
 	//buf[1] = (unsigned char) h;
 
-	//buf[2] = (unsigned char) (DIM >> 8);
-	//buf[3] = (unsigned char) DIM;
+	//buf[2] = (unsigned char) (DIM_G >> 8);
+	//buf[3] = (unsigned char) DIM_G;
 
 	k = 0;
 
@@ -532,10 +532,10 @@ emit_graph(void)
 
 	for (i = 0; i < draw_count; i++) {
 		x = draw_buf[i].x;
-		y = DIM - draw_buf[i].y; // flip the y coordinate
-		if (x < 0 || x > DIM)
+		y = DIM_G - draw_buf[i].y; // flip the y coordinate
+		if (x < 0 || x > DIM_G)
 			continue;
-		if (y < 0 || y > DIM)
+		if (y < 0 || y > DIM_G)
 			continue;
 		x += XOFF;
 		y += YOFF;
@@ -548,14 +548,14 @@ emit_graph(void)
 
 	buf[k++] = 0;
 
-	shipout(buf, DIM + 1, h);
+	shipout(buf, DIM_G + 1, h);
 }
 
 static void
 get_xzero(void)
 {
 	double x;
-	x = -((double) DIM) * xmin / (xmax - xmin) + 0.5;
+	x = -((double) DIM_G) * xmin / (xmax - xmin) + 0.5;
 	if (x < -10000.0)
 		x = -10000.0;
 	if (x > 10000.0)
@@ -567,12 +567,12 @@ static void
 get_yzero(void)
 {
 	double y;
-	y = -((double) DIM) * ymin / (ymax - ymin) + 0.5;
+	y = -((double) DIM_G) * ymin / (ymax - ymin) + 0.5;
 	if (y < -10000.0)
 		y = -10000.0;
 	if (y > 10000.0)
 		y = 10000.0;
-	yzero = DIM - (int) y; // flip the y coordinate
+	yzero = DIM_G - (int) y; // flip the y coordinate
 }
 
 static void
@@ -589,8 +589,8 @@ emit_box(void)
 	buf[k++] = (unsigned char) (y >> 8);
 	buf[k++] = (unsigned char) y;
 
-	x = XOFF + DIM;
-	y = YOFF + DIM;
+	x = XOFF + DIM_G;
+	y = YOFF + DIM_G;
 	buf[k++] = (unsigned char) (x >> 8);
 	buf[k++] = (unsigned char) x;
 	buf[k++] = (unsigned char) (y >> 8);
@@ -602,7 +602,7 @@ emit_xaxis(void)
 {
 	int x, y;
 
-	if (yzero < 0 || yzero > DIM)
+	if (yzero < 0 || yzero > DIM_G)
 		return;
 
 	buf[k++] = DRAW_LINE;
@@ -615,7 +615,7 @@ emit_xaxis(void)
 	buf[k++] = (unsigned char) (y >> 8);
 	buf[k++] = (unsigned char) y;
 
-	x = XOFF + DIM;
+	x = XOFF + DIM_G;
 	y = YOFF + yzero;
 
 	buf[k++] = (unsigned char) (x >> 8);
@@ -629,7 +629,7 @@ emit_yaxis(void)
 {
 	int x, y;
 
-	if (xzero < 0 || xzero > DIM)
+	if (xzero < 0 || xzero > DIM_G)
 		return;
 
 	buf[k++] = DRAW_LINE;
@@ -643,7 +643,7 @@ emit_yaxis(void)
 	buf[k++] = (unsigned char) y;
 
 	x = XOFF + xzero;
-	y = YOFF + DIM;
+	y = YOFF + DIM_G;
 
 	buf[k++] = (unsigned char) (x >> 8);
 	buf[k++] = (unsigned char) x;
@@ -660,7 +660,7 @@ emit_xscale(void)
 	sprintf(s, "%g", xmin);
 	emit_xscale_f(0, s);
 	sprintf(s, "%g", xmax);
-	emit_xscale_f(DIM, s);
+	emit_xscale_f(DIM_G, s);
 }
 
 static void
@@ -678,7 +678,7 @@ emit_xscale_f(int xx, char *s)
 		d = 0;
 
 	x = XOFF + xx - (w - d) / 2 - d;
-	y = YOFF + DIM + SHIM;
+	y = YOFF + DIM_G + SHIM;
 
 	buf[k++] = SMALL_FONT;
 	buf[k++] = (unsigned char) (x >> 8);
@@ -703,7 +703,7 @@ emit_yscale(void)
 	sprintf(s, "%g", ymax);
 	emit_yscale_f(0, s);
 	sprintf(s, "%g", ymin);
-	emit_yscale_f(DIM, s);
+	emit_yscale_f(DIM_G, s);
 }
 
 static void
@@ -739,11 +739,11 @@ emit_xzero(void)
 {
 	int x, y;
 
-	if (xzero < DIM / 4 || xzero > 3 * DIM / 4)
+	if (xzero < DIM_G / 4 || xzero > 3 * DIM_G / 4)
 		return;
 
 	x = XOFF + xzero - text_width(SMALL_FONT, "0") / 2;
-	y = YOFF + DIM + SHIM;
+	y = YOFF + DIM_G + SHIM;
 
 	buf[k++] = SMALL_FONT;
 	buf[k++] = (unsigned char) (x >> 8);
@@ -763,7 +763,7 @@ emit_yzero(void)
 {
 	int x, y;
 
-	if (yzero < DIM / 4 || yzero > 3 * DIM / 4)
+	if (yzero < DIM_G / 4 || yzero > 3 * DIM_G / 4)
 		return;
 
 	x = XOFF - SHIM - text_width(SMALL_FONT, "0");

@@ -10,9 +10,9 @@ extern int tof; // top of frame
 extern struct atom *stack[STACKSIZE];
 extern struct atom *frame[FRAMESIZE];
  
-extern struct atom symtab[NSYM];
-extern struct atom *binding[NSYM];
-extern struct atom *arglist[NSYM];
+extern struct atom *symtab[];
+extern struct atom *binding[];
+extern struct atom *arglist[];
  
 extern struct atom *p0;
 extern struct atom *p1;
@@ -43,6 +43,8 @@ extern int block_count;
 extern int free_count;
 extern int gc_count;
 extern int bignum_count;
+extern int ksym_count;
+extern int usym_count;
 extern int string_count;
 extern int tensor_count;
 extern int max_stack;

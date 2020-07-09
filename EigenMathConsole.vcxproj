@@ -237,7 +237,6 @@
     <ClCompile Include="src\test.c" />
     <ClCompile Include="src\transpose.c" />
     <ClCompile Include="src\userfunc.c" />
-    <ClCompile Include="src\zero.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\defs.h" />

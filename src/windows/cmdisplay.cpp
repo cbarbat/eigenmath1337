@@ -326,6 +326,19 @@ count_denominators(atom *p)
 	return count;
 }
 
+// i.e. 2, 2^3, etc.
+
+int
+isintegerfactor(struct atom *p)
+{
+	if (isinteger(p) || (car(p) == symbol(POWER)
+		&& isinteger(cadr(p))
+		&& isinteger(caddr(p))))
+		return 1;
+	else
+		return 0;
+}
+
 // an integer factor is 2, 2^3, etc.
 
 static int
@@ -913,7 +926,7 @@ emit_symbol(atom *p)
 		return;
 	}
 
-	s = get_printname(p);
+	s = printname(p);
 
 	if (iskeyword(p)) {
 		emit_str(TIMES_FONT, s);

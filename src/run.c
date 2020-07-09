@@ -55,6 +55,23 @@ init(void)
 	tos = 0;
 	tof = 0;
 
+	if (zero) {
+		p0 = symbol(NIL);
+		p1 = symbol(NIL);
+		p2 = symbol(NIL);
+		p3 = symbol(NIL);
+		p4 = symbol(NIL);
+		p5 = symbol(NIL);
+		p6 = symbol(NIL);
+		p7 = symbol(NIL);
+		p8 = symbol(NIL);
+		p9 = symbol(NIL);
+		set_binding(symbol(TRACE), zero);
+		return;
+	}
+
+	init_symbol_table();
+
 	p0 = symbol(NIL);
 	p1 = symbol(NIL);
 	p2 = symbol(NIL);
@@ -66,14 +83,7 @@ init(void)
 	p8 = symbol(NIL);
 	p9 = symbol(NIL);
 
-	if (zero) {
-		set_binding(symbol(TRACE), zero);
-		return;
-	}
-
 	init_bignums();
-
-	init_symbol_table();
 
 	push_symbol(POWER);
 	push_integer(-1);
@@ -192,7 +202,12 @@ run_file(char *filename)
 		malloc_kaput();
 	}
 
-	push_string(buf); // popped below
+	p1 = alloc(); // do this so gc can free the buf in case of stop
+	p1->k = STR;
+	p1->u.str = buf;
+	string_count++;
+
+	push(p1); // popped below
 
 	if (read(fd, buf, n) != n) {
 		close(fd);
@@ -291,6 +306,12 @@ eval_status(void)
 	print_str(tbuf);
 
 	sprintf(tbuf, "bignum_count %d\n", bignum_count);
+	print_str(tbuf);
+
+	sprintf(tbuf, "ksym_count %d\n", ksym_count);
+	print_str(tbuf);
+
+	sprintf(tbuf, "usym_count %d\n", usym_count);
 	print_str(tbuf);
 
 	sprintf(tbuf, "string_count %d\n", string_count);

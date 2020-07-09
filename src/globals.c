@@ -9,9 +9,9 @@ int tof; // top of frame
 struct atom *stack[STACKSIZE];
 struct atom *frame[FRAMESIZE];
 
-struct atom symtab[NSYM];
-struct atom *binding[NSYM];
-struct atom *arglist[NSYM];
+struct atom *symtab[26 * NSYM];
+struct atom *binding[26 * NSYM];
+struct atom *arglist[26 * NSYM];
 
 struct atom *p0;
 struct atom *p1;
@@ -42,6 +42,8 @@ int block_count;
 int free_count;
 int gc_count;
 int bignum_count;
+int ksym_count;
+int usym_count;
 int string_count;
 int tensor_count;
 int max_stack;

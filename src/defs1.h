@@ -18,7 +18,7 @@
 #define FRAMESIZE 10000 // limits recursion depth, prevents seg fault
 #define BLOCKSIZE 100000
 #define MAXBLOCKS 250
-#define NSYM 1000
+#define NSYM 100
 
 // MAXBLOCKS * BLOCKSIZE * sizeof (struct atom) = 600,000,000 bytes
 
@@ -63,183 +63,195 @@ struct atom {
 			struct atom *car;
 			struct atom *cdr;
 		} cons;
-		char *printname;
-		char *str;
-		struct tensor *tensor;
+		struct {
+			char *name;
+			void (*func)(void);
+		} ksym;
+		struct {
+			char *name;
+			uint32_t index;
+		} usym;
 		struct {
 			uint32_t *a; // rational number a over b
 			uint32_t *b;
 		} q;
 		double d;
+		char *str;
+		struct tensor *tensor;
 	} u;
 	uint8_t k, tag, sign;
 };
 
-// the following enum is for struct atom, member k
+#define CONS		0
+#define KSYM		1
+#define USYM		2
+#define RATIONAL	3
+#define DOUBLE		4
+#define STR		5
+#define TENSOR		6
 
-enum {
-	CONS,
-	RATIONAL,
-	DOUBLE,
-	STR,
-	TENSOR,
-	SYM,
-};
+#define METAA		0
+#define ABS		1
+#define ADD		2
+#define ADJ		3
+#define AND		4
+#define ARCCOS		5
+#define ARCCOSH		6
+#define ARCSIN		7
+#define ARCSINH		8
+#define ARCTAN		9
+#define ARCTANH		10
+#define ARG		11
+#define ATOMIZE		12
 
-// the following enum is for indexing the symbol table
+#define METAB		(NSYM + 0)
+#define BESSELJ		(NSYM + 1)
+#define BESSELY		(NSYM + 2)
+#define BINDING		(NSYM + 3)
+#define BINOMIAL	(NSYM + 4)
 
-enum {
-	ABS,
-	ADD,
-	ADJ,
-	AND,
-	ARCCOS,
-	ARCCOSH,
-	ARCSIN,
-	ARCSINH,
-	ARCTAN,
-	ARCTANH,
-	ARG,
-	ATOMIZE,
-	BESSELJ,
-	BESSELY,
-	BINDING,
-	BINOMIAL,
-	CEILING,
-	CHECK,
-	CHOOSE,
-	CIRCEXP,
-	CLEAR,
-	CLOCK,
-	COEFF,
-	COFACTOR,
-	CONJ,
-	CONTRACT,
-	COS,
-	COSH,
-	DEFINT,
-	DEGREE,
-	DENOMINATOR,
-	DERIVATIVE,
-	DET,
-	DIM,
-	DO,
-	DOT,
-	DRAW,
-	EIGEN,
-	EIGENVAL,
-	EIGENVEC,
-	ERF,
-	ERFC,
-	EVAL,
-	EXIT,
-	EXP,
-	EXPAND,
-	EXPCOS,
-	EXPCOSH,
-	EXPSIN,
-	EXPSINH,
-	EXPTAN,
-	EXPTANH,
-	FACTOR,
-	FACTORIAL,
-	FILTER,
-	FLOATF,
-	FLOOR,
-	FOR,
-	GCD,
-	HERMITE,
-	HILBERT,
-	IMAG,
-	INDEX,
-	INNER,
-	INTEGRAL,
-	INV,
-	ISPRIME,
-	LAGUERRE,
-	LATEX,
-	LCM,
-	LEADING,
-	LEGENDRE,
-	LISP,
-	LOG,
-	MAG,
-	MATHJAX,
-	MATHML,
-	MOD,
-	MULTIPLY,
-	NOT,
-	NROOTS,
-	NUMBER,
-	NUMERATOR,
-	OR,
-	OUTER,
-	POLAR,
-	POWER,
-	PRATT,
-	PRIME,
-	PRINT,
-	PRODUCT,
-	QUOTE,
-	QUOTIENT,
-	RANK,
-	RATIONALIZE,
-	REAL,
-	RECTF,
-	ROOTS,
-	RUN,
-	SETQ,
-	SGN,
-	SIMPLIFY,
-	SIN,
-	SINH,
-	SQRT,
-	STATUS,
-	STOP,
-	STRING,
-	SUBST,
-	SUM,
-	TAN,
-	TANH,
-	TAYLOR,
-	TEST,
-	TESTEQ,
-	TESTGE,
-	TESTGT,
-	TESTLE,
-	TESTLT,
-	TRANSPOSE,
-	UNIT,
-	ZERO,
+#define CEILING		(2 * NSYM + 0)
+#define CHECK		(2 * NSYM + 1)
+#define CHOOSE		(2 * NSYM + 2)
+#define CIRCEXP		(2 * NSYM + 3)
+#define CLEAR		(2 * NSYM + 4)
+#define CLOCK		(2 * NSYM + 5)
+#define COEFF		(2 * NSYM + 6)
+#define COFACTOR	(2 * NSYM + 7)
+#define CONJ		(2 * NSYM + 8)
+#define CONTRACT	(2 * NSYM + 9)
+#define COS		(2 * NSYM + 10)
+#define COSH		(2 * NSYM + 11)
 
-	MARK1,	// boundary (symbols above are functions)
+#define SYMBOL_D	(3 * NSYM + 0)
+#define DEFINT		(3 * NSYM + 1)
+#define DEGREE		(3 * NSYM + 2)
+#define DENOMINATOR	(3 * NSYM + 3)
+#define DERIVATIVE	(3 * NSYM + 4)
+#define DET		(3 * NSYM + 5)
+#define DIM		(3 * NSYM + 6)
+#define DO		(3 * NSYM + 7)
+#define DOT		(3 * NSYM + 8)
+#define DRAW		(3 * NSYM + 9)
 
-	EXP1,	// natural number
-	NIL,
-	PI,
+#define EIGEN		(4 * NSYM + 0)
+#define EIGENVAL	(4 * NSYM + 1)
+#define EIGENVEC	(4 * NSYM + 2)
+#define ERF		(4 * NSYM + 3)
+#define ERFC		(4 * NSYM + 4)
+#define EVAL		(4 * NSYM + 5)
+#define EXIT		(4 * NSYM + 6)
+#define EXP		(4 * NSYM + 7)
+#define EXP1		(4 * NSYM + 8)
+#define EXPAND		(4 * NSYM + 9)
+#define EXPCOS		(4 * NSYM + 10)
+#define EXPCOSH		(4 * NSYM + 11)
+#define EXPSIN		(4 * NSYM + 12)
+#define EXPSINH		(4 * NSYM + 13)
+#define EXPTAN		(4 * NSYM + 14)
+#define EXPTANH		(4 * NSYM + 15)
 
-	MARK2,	// boundary (symbols above cannot be bound)
+#define FACTOR		(5 * NSYM + 0)
+#define FACTORIAL	(5 * NSYM + 1)
+#define FILTER		(5 * NSYM + 2)
+#define FLOATF		(5 * NSYM + 3)
+#define FLOOR		(5 * NSYM + 4)
+#define FOR		(5 * NSYM + 5)
 
-	METAA,
-	METAB,
-	METAX,
-	SPECX,
+#define GCD		(6 * NSYM + 0)
 
-	LAST,
-	TRACE,
-	TTY,
+#define HERMITE		(7 * NSYM + 0)
+#define HILBERT		(7 * NSYM + 1)
 
-	MARK3,	// start of user defined symbols
+#define SYMBOL_I	(8 * NSYM + 0)
+#define IMAG		(8 * NSYM + 1)
+#define INDEX		(8 * NSYM + 2)
+#define INNER		(8 * NSYM + 3)
+#define INTEGRAL	(8 * NSYM + 4)
+#define INV		(8 * NSYM + 5)
+#define ISPRIME		(8 * NSYM + 6)
 
-	SYMBOL_D,
-	SYMBOL_I,
-	SYMBOL_J,
-	SYMBOL_S,
-	SYMBOL_T,
-	SYMBOL_X,
-	SYMBOL_Y,
-	SYMBOL_Z,
-};
+#define SYMBOL_J	(9 * NSYM + 0)
+
+#define LAGUERRE	(11 * NSYM + 0)
+#define LAST		(11 * NSYM + 1)
+#define LATEX		(11 * NSYM + 2)
+#define LCM		(11 * NSYM + 3)
+#define LEADING		(11 * NSYM + 4)
+#define LEGENDRE	(11 * NSYM + 5)
+#define LISP		(11 * NSYM + 6)
+#define LOG		(11 * NSYM + 7)
+
+#define MAG		(12 * NSYM + 0)
+#define MATHJAX		(12 * NSYM + 1)
+#define MATHML		(12 * NSYM + 2)
+#define MOD		(12 * NSYM + 3)
+#define MULTIPLY	(12 * NSYM + 4)
+
+#define NIL		(13 * NSYM + 0)
+#define NOT		(13 * NSYM + 1)
+#define NROOTS		(13 * NSYM + 2)
+#define NUMBER		(13 * NSYM + 3)
+#define NUMERATOR	(13 * NSYM + 4)
+
+#define OR		(14 * NSYM + 0)
+#define OUTER		(14 * NSYM + 1)
+
+#define PI		(15 * NSYM + 0)
+#define POLAR		(15 * NSYM + 1)
+#define POWER		(15 * NSYM + 2)
+#define PRATT		(15 * NSYM + 3)
+#define PRIME		(15 * NSYM + 4)
+#define PRINT		(15 * NSYM + 5)
+#define PRODUCT		(15 * NSYM + 6)
+
+#define QUOTE		(16 * NSYM + 0)
+#define QUOTIENT	(16 * NSYM + 1)
+
+#define RANK		(17 * NSYM + 0)
+#define RATIONALIZE	(17 * NSYM + 1)
+#define REAL		(17 * NSYM + 2)
+#define RECTF		(17 * NSYM + 3)
+#define ROOTS		(17 * NSYM + 4)
+#define RUN		(17 * NSYM + 5)
+
+#define SYMBOL_S	(18 * NSYM + 0)
+#define SETQ		(18 * NSYM + 1)
+#define SGN		(18 * NSYM + 2)
+#define SIMPLIFY	(18 * NSYM + 3)
+#define SIN		(18 * NSYM + 4)
+#define SINH		(18 * NSYM + 5)
+#define SQRT		(18 * NSYM + 6)
+#define STATUS		(18 * NSYM + 7)
+#define STOP		(18 * NSYM + 8)
+#define STRING		(18 * NSYM + 9)
+#define SUBST		(18 * NSYM + 10)
+#define SUM		(18 * NSYM + 11)
+
+#define SYMBOL_T	(19 * NSYM + 0)
+#define TAN		(19 * NSYM + 1)
+#define TANH		(19 * NSYM + 2)
+#define TAYLOR		(19 * NSYM + 3)
+#define TEST		(19 * NSYM + 4)
+#define TESTEQ		(19 * NSYM + 5)
+#define TESTGE		(19 * NSYM + 6)
+#define TESTGT		(19 * NSYM + 7)
+#define TESTLE		(19 * NSYM + 8)
+#define TESTLT		(19 * NSYM + 9)
+#define TRACE		(19 * NSYM + 10)
+#define TRANSPOSE	(19 * NSYM + 11)
+#define TTY		(19 * NSYM + 12)
+
+#define UNIT		(20 * NSYM + 0)
+
+#define SYMBOL_X	(23 * NSYM + 0)
+#define METAX		(23 * NSYM + 1)
+#define SPECX		(23 * NSYM + 2)
+
+#define SYMBOL_Y	(24 * NSYM + 0)
+
+#define SYMBOL_Z	(25 * NSYM + 0)
+#define ZERO		(25 * NSYM + 1)
 
 #define MAXPRIMETAB 10000
 #define MAXDIM 24
@@ -251,7 +263,7 @@ struct tensor {
 	struct atom *elem[1];
 };
 
-#define symbol(x) (symtab + (x))
+#define symbol(x) symtab[x]
 #define push_symbol(x) push(symbol(x))
 #define iscons(p) ((p)->k == CONS)
 #define isrational(p) ((p)->k == RATIONAL)
@@ -259,8 +271,8 @@ struct tensor {
 #define isnum(p) (isrational(p) || isdouble(p))
 #define isstr(p) ((p)->k == STR)
 #define istensor(p) ((p)->k == TENSOR)
-#define issymbol(p) ((p)->k == SYM)
-#define iskeyword(p) ((p)->k == SYM && (p) - symtab < MARK1)
+#define issymbol(p) ((p)->k == KSYM || (p)->k == USYM)
+#define iskeyword(p) ((p)->k == KSYM)
 
 #define car(p) (iscons(p) ? (p)->u.cons.car : symbol(NIL))
 #define cdr(p) (iscons(p) ? (p)->u.cons.cdr : symbol(NIL))
