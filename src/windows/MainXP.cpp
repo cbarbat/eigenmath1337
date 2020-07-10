@@ -25,6 +25,7 @@
 #include "help.h"
 
 extern "C" { 
+#include "..\defs.h"
 	int stop_flag;
 	void run(char *);
 	void eval_clear(void);
@@ -261,11 +262,15 @@ extern "C"
 void
 eval_exit(void)
 {
+	// do nothing, so scripts don't exit the GUI
+	push_symbol(NIL);
+	/*
 	PostMessage(
 		main_window,
 		WM_QUIT,
 		0,
 		0);
+	*/
 }
 
 void
