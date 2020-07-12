@@ -478,8 +478,13 @@ cosh(0)
 check(last = 1)
 cosh(arccosh(x))
 check(last = x)
+
+clear
+trace=1
+
 defint(x^2,y,0,sqrt(1-x^2),x,-1,1)
 check(last = 1/8*pi)
+
 z=2
 P=(x,y,z)
 a=abs(cross(d(P,x),d(P,y)))
@@ -490,6 +495,10 @@ P=(x,y,z)
 a=abs(cross(d(P,x),d(P,y)))
 defint(a,x,0,1,y,0,1)
 check(last = 3/2+5/8*log(5))
+
+clear
+trace=1
+
 x=u*cos(v)
 y=u*sin(v)
 z=v
@@ -497,6 +506,10 @@ S=(x,y,z)
 a=abs(cross(d(S,u),d(S,v)))
 defint(a,u,0,1,v,0,3pi)
 check(last = 3/2*pi*log(1+2^(1/2))+3*pi/(2^(1/2)))
+
+clear
+trace=1
+
 denominator(2/3)
 check(last = 3)
 denominator(x)
@@ -1128,8 +1141,10 @@ isprime(2^50-71)
 check(last = 1)
 isprime(2^40-87)
 check(last = 1)
-integral(x^2+x)-(1/2*x^2+1/3*x^3)
-check(last = 0)
+
+integral(x^2+x)
+check(last = 1/3 x^3 + 1/2 x^2)
+
 #1
 clear
 trace = 1
@@ -1180,14 +1195,23 @@ check(last = 0)
 integral(X/(A+B*X),X)+A*B^(-2)*log(A+B*X)-X/B
 check(last = 0)
 #31
-integral(X/(A+B*X)^2,X)-1/B^2*(log(A+B*X)+A/(A+B*X))
+integral(X/(A+B*X)^2,X) - log(A+B*X)/B^2 - A/(B^2*(A+B*X))
 check(last = 0)
+
 #33
-integral(X^2/(A+B*X),X)-1/B^2*(1/2*(A+B*X)^2-2*A*(A+B*X)+A^2*log(A+B*X))
-check(last = 0)
+
+f = integral(X^2 / (A + B X),X)
+g = (2 A^2 log(A + B X) + B X (B X - 2 A)) / (2 B^3)
+g
+g
+check(f = g)
+
 #34
-integral(X^2/(A+B*X)^2,X)-1/B^3*(A+B*X-2*A*log(A+B*X)-A^2/(A+B*X))
-check(last = 0)
+
+f = integral(X^2 / (A + B X)^2,X)
+g = (-A^2 / (A + B X) - 2 A log(A + B X) + B X) / B^3
+check(f = g)
+
 #35
 integral(X^2/(A+B*X)^3,X)-1/B^3*(log(A+B*X)+2*A/(A+B*X)-1/2*A^2/(A+B*X)^2)
 check(last = 0)
@@ -1209,31 +1233,48 @@ check(last = 0)
 #42
 integral(1/X^2*1/(A+B*X)^2,X)+(A+2*B*X)/(A^2*X*(A+B*X))-2*B/A^3*log((A+B*X)/X)
 check(last = 0)
+
 #60
-integral(1/(2+3*X^2),X)-1/sqrt(6)*arctan(1/2*X*sqrt(6))
-check(last = 0)
-integral(1/(-2-3*X^2),X)-1/sqrt(6)*arctan(-1/2*X*sqrt(6))
-check(last = 0)
-#61
-integral(1/(2-3*X^2),X)-1/2*1/sqrt(6)*log((2+X*sqrt(6))/(2-X*sqrt(6)))
-check(last = 0)
-integral(1/(-2+3*X^2),X)-1/2*1/sqrt(6)*log((-2+X*sqrt(6))/(-2-X*sqrt(6)))
-check(last = 0)
+
+f = integral(1 / (2 + 3 X^2),X)
+g = arctan(sqrt(3 / 2) X) / sqrt(6)
+check(f = g)
+
+f = integral(1 / (-2 - 3 X^2),X)
+g = -arctan(sqrt(3 / 2) X) / sqrt(6)
+check(f = g)
+
+f = integral(1 / (2 - 3 X^2),X)
+g = (log(3 X + sqrt(6)) - log(sqrt(6) - 3 X)) / (2 sqrt(6))
+check(f = g)
+
+f = integral(1 / (-2 + 3 X^2),X)
+g = (log(sqrt(6) - 3 X) - log(3 X + sqrt(6))) / (2 sqrt(6))
+check(f = g)
+
 #63
+
 integral(X/(A+B*X^2),X)-1/2*1/B*log(A+B*X^2)
 check(last = 0)
+
 #64
-integral(X^2/(A+B*X^2),X)-X/B+A/B*integral(1/(A+B*X^2),X)
-check(last = 0)
+integral(X^2/(A+B*X^2),X)
+check(last = X / B - sqrt(A) arctan(sqrt(B / A) X) / B^(3/2))
+
 #65
-integral(1/(A+B*X^2)^2,X)-X/(2*A*(A+B*X^2))-1/2*1/A*integral(1/(A+B*X^2),X)
-check(last = 0)
+integral(1/(A+B*X^2)^2,X)
+check(last = arctan(sqrt(B/A) X) / (2 A^(3/2) sqrt(B)) + X / (2 A^2 + 2 A B X^2))
+
 #70
 integral(1/X*1/(A+B*X^2),X)-1/2*1/A*log(X^2/(A+B*X^2))
 check(last = 0)
+
 #71
-integral(1/X^2*1/(A+B*X^2),X)+1/(A*X)+B/A*integral(1/(A+B*X^2),X)
-check(last = 0)
+
+f = integral(1 / X^2 * 1 / (A + B X^2),X)
+g = -sqrt(B) arctan(sqrt(B / A) X) / A^(3/2) - 1 / (A X)
+check(f = g)
+
 #74
 integral(1/(A+B*X^3),X)-1/3*1/A*(A/B)^(1/3)*(1/2*log(((A/B)^(1/3)+X)^3/(A+B*X^3))+sqrt(3)*arctan((2*X-(A/B)^(1/3))*(A/B)^(-1/3)/sqrt(3)))
 check(last = 0)
@@ -1270,12 +1311,19 @@ check(last = 0)
 #126
 integral(X^2*sqrt(A+B*X),X)-2*(8*A^2-12*A*B*X+15*B^2*X^2)*sqrt((A+B*X)^3)/105*B^(-3)
 check(last = 0)
+
 #128
-integral(sqrt(A+B*X)/X,X)-2*sqrt(A+B*X)-A*integral(1/X*1/sqrt(A+B*X),X)
-check(last = 0)
+
+f = integral(sqrt(A + B X)/X,X)
+g = 2 sqrt(A + B X) - 2 sqrt(A) arctanh(sqrt(A + B X) / sqrt(A))
+check(f = g)
+
 #129
-integral(sqrt(A+B*X)/X^2,X)+sqrt(A+B*X)/X-B/2*integral(1/X*1/sqrt(A+B*X),X)
-check(last = 0)
+
+f = integral(sqrt(A + B X) / X^2,X)
+g = -sqrt(A + B X) / X - B arctanh(sqrt(A + B X) / sqrt(A)) / sqrt(A)
+check(f = g)
+
 #131
 integral(1/sqrt(A+B*X),X)-2*sqrt(A+B*X)/B
 check(last = 0)
@@ -1291,9 +1339,13 @@ check(last = 0)
 #136
 integral(1/X*1/sqrt(-2+B*X),X)-2/sqrt(2)*arctan(sqrt((-2+B*X)/2))
 check(last = 0)
+
 #137
-integral(1/X^2*1/sqrt(A+B*X),X)+sqrt(A+B*X)/A/X+1/2*B/A*integral(1/X*1/sqrt(A+B*X),X)
-check(last = 0)
+
+f = integral(1 / X^2 * 1 / sqrt(A + B X),X)
+g = B arctanh(sqrt(A + B X) / sqrt(A)) / A^(3/2) - sqrt(A + B X) / (A X)
+check(f = g)
+
 #156
 integral(sqrt(X^2+A),X)-1/2*(X*sqrt(X^2+A)+A*log(X+sqrt(X^2+A)))
 check(last = 0)
@@ -1334,9 +1386,13 @@ check(last = 0)
 #167
 integral(X*sqrt((X^2+A)^3),X)-1/5*sqrt((X^2+A)^5)
 check(last = 0)
+
 #168
-integral(X^2*sqrt(X^2+A),X)-1/4*X*sqrt((X^2+A)^3)+1/8*A*X*sqrt(X^2+A)+1/8*A^2*log(X+sqrt(X^2+A))
-check(last = 0)
+
+f = integral(X^2 sqrt(X^2 + A),X)
+g = (X sqrt(X^2 + A) (A + 2 X^2) - A^2 log(sqrt(X^2 + A) + X)) / 8
+check(f = g)
+
 #169
 integral(X^3*sqrt(X^2+7),X)-(1/5*X^2-2/15*7)*sqrt((X^2+7)^3)
 check(last = 0)
@@ -1398,9 +1454,13 @@ check(last = 0)
 #205
 integral(X*sqrt(A-X^2),X)+1/3*sqrt((A-X^2)^3)
 check(last = 0)
+
 #210
-integral(X^2*sqrt(7-X^2),X)+1/4*X*sqrt((7-X^2)^3)-7/8*(X*sqrt(7-X^2)+7*arcsin(X/sqrt(7)))
-check(last = 0)
+
+f = integral(X^2 sqrt(7 - X^2),X)
+g = 1/4 X^3 (-X^2 + 7)^(1/2) - 7/8 X (-X^2 + 7)^(1/2) - 49/8 i log(-X + i (-X^2 + 7)^(1/2))
+check(f = g)
+
 #211
 integral(X^3*sqrt(7-X^2),X)-(-1/5*X^2-2/15*7)*sqrt((7-X^2)^3)
 check(last = 0)
@@ -1596,9 +1656,17 @@ check(last = 0)
 #572
 integral(cosh(X)^2,X)-sinh(2*X)/4-X/2
 check(last = 0)
-integral(exp(a*x^2))+i*sqrt(pi)*erf(i*sqrt(a)*x)/sqrt(a)/2
-check(last = 0)
-integral(exp(-x^2))-sqrt(pi)*erf(x)/2
+
+#573
+
+f = integral(exp(a x^2))
+g = -i sqrt(pi) erf(i sqrt(a) x) / sqrt(a) / 2
+check(f = g)
+
+f = integral(exp(-x^2))
+g = sqrt(pi) erf(x) / 2
+check(f = g)
+
 check(last = 0)
 integral(exp(-3*x^2))-sqrt(pi/3)*erf(sqrt(3)*x)/2
 check(last = 0)
@@ -1827,6 +1895,10 @@ S=(x,y,z)
 s=dot(F,cross(d(S,x),d(S,y)))
 defint(s,y,-sqrt(1-x^2),sqrt(1-x^2),x,-1,1)
 check(last = 1/48*pi)
+
+clear
+trace=1
+
 laplacian(f)=1/r^2*d(r^2*d(f,r),r)+1/(r^2*sin(theta))*d(sin(theta)*d(f,theta),theta)+1/(r*sin(theta))^2*d(f,phi,phi)
 n=7
 l=3
@@ -1839,6 +1911,10 @@ K=laplacian(psi)
 V=2*psi/r
 circexp(sin(theta)*(E-K-V))
 check(last = 0)
+
+clear
+trace=1
+
 P=2x^3-y^3
 Q=x^3+y^3
 f=d(Q,x)-d(P,y)
@@ -1846,6 +1922,10 @@ x=r*cos(theta)
 y=r*sin(theta)
 defint(f*r,r,0,1,theta,0,2pi)
 check(last = 3/2*pi)
+
+clear
+trace=1
+
 x=cos(t)
 y=sin(t)
 P=2x^3-y^3
@@ -2571,20 +2651,32 @@ f(2)
 check(last = x^2)
 zero(2,2)
 check(last = ((0,0),(0,0)))
-x=quote(x)
-y=quote(y)
-t=quote(t)
+
+-- line integral (p. 21)
+
+clear
+trace=1
+
 P=1-y
 Q=x
 x=2*cos(t)
 y=2*sin(t)
 defint(P*d(x,t)+Q*d(y,t),t,0,2pi)
 check(last=8pi)
-x=quote(x) --remove parametrization of x
-y=quote(y) --remove parametrization of y
+
+-- surface integral (p. 21)
+
+clear
+trace=1
+
+P=1-y
+Q=x
 h=sqrt(4-x^2)
 defint(d(Q,x)-d(P,y),y,-h,h,x,-2,2)
 check(last=8pi)
+
+-- surface integral using polar coordinates
+
 f=d(Q,x)-d(P,y) --do before change of coordinates
 x=r*cos(theta)
 y=r*sin(theta)
@@ -2592,13 +2684,20 @@ defint(f*r,r,0,2,theta,0,2pi)
 check(last=8pi)
 defint(f*r,theta,0,2pi,r,0,2) --try integrating over theta first
 check(last=8pi)
-x=quote(x)
+
+clear
+trace=1
+
 integral(cos(x)^2*sin(x))
 check(last=-cos(x)^3/3)
 integral((1+cos(x)^2)*sin(x))
 check(last=-cos(x)-cos(x)^3/3)
 defint((1+cos(theta)^2)*sin(theta),theta,0,pi,phi,0,2*pi)
 check(last=16*pi/3)
+
+clear
+trace=1
+
 a = C * (sqrt(n+1) + sqrt(n))
 b = i * C * (sqrt(n+1) - sqrt(n))
 sqrt(a^2 + b^2)
