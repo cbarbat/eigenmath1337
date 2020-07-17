@@ -339,6 +339,26 @@ end_mathjax(void)
 }
 
 void
+eval_clear(void)
+{
+	save_binding(symbol(PRATT));
+	save_binding(symbol(TRACE));
+	save_binding(symbol(TTY));
+
+	clear_symbols();
+
+	run_init_script();
+
+	gc(); // garbage collection
+
+	restore_binding(symbol(TTY));
+	restore_binding(symbol(TRACE));
+	restore_binding(symbol(PRATT));
+
+	push_symbol(NIL); // result
+}
+
+void
 eval_draw(void)
 {
 	push_symbol(NIL);
@@ -352,8 +372,8 @@ eval_exit(void)
 }
 
 void
-eval_clear(void)
+malloc_kaput(void)
 {
-	clear_flag = 1;
-	push_symbol(NIL);
+	fprintf(stderr, "malloc kaput\n");
+	exit(1);
 }

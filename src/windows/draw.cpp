@@ -70,12 +70,12 @@ eval_draw(void)
 void
 draw_main(void)
 {
-	if (draw_flag) {
-		draw_flag = 0; // so "stop" really stops
+	if (drawing) {
+		drawing = 0; // so "stop" really stops
 		stop("draw calls draw");
 	}
 
-	draw_flag++;
+	drawing++;
 
 	setup_trange();
 
@@ -89,7 +89,7 @@ draw_main(void)
 
 	emit_graph();
 
-	draw_flag--;
+	drawing--;
 }
 
 /*	xrange sets the horizontal scale
@@ -216,14 +216,14 @@ eval_f(double t)
 	save_tos = tos;
 	save_tof = tof;
 
-	draw_flag++;
+	drawing++;
 
 	if (setjmp(draw_stop_return)) {
 		tos = save_tos;
 		push(symbol(NIL));
 		tof = save_tof;
 		restore();
-		draw_flag--;
+		drawing--;
 		return;
 	}
 
@@ -237,7 +237,7 @@ eval_f(double t)
 	eval();
 
 	restore();
-	draw_flag--;
+	drawing--;
 }
 
 #define MAX_DEPTH 6

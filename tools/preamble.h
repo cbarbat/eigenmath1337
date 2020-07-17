@@ -30,7 +30,7 @@ MathML and MathJax results look best on Firefox.
 
 BSD 2-Clause License
 
-Copyright (c) 2020, George Weigt, Calin Barbat
+Copyright (c) 2020, George Weigt
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

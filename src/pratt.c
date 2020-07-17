@@ -1,3 +1,6 @@
+//
+// Copyright 2020 by Calin Barbat
+//
 // This scanner uses the method of V. Pratt.
 //
 // The char pointers token_str and scan_str are pointers to the input string as

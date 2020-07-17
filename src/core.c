@@ -1,12 +1,5 @@
 #include "defs.h"
 
-void
-malloc_kaput(void)
-{
-	printf("malloc kaput\n");
-	exit(1);
-}
-
 struct atom *
 alloc(void)
 {

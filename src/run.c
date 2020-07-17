@@ -18,40 +18,18 @@ run(char *s)
 
 	for (;;) {
 
-		expanding = 1;
-
 		s = scan_input(s);
 
 		if (s == NULL)
 			break; // end of input
 
 		eval_and_print_result();
-
-		if (clear_flag)
-			init();
 	}
 }
-
-char *init_script[] = {
-	"e=exp(1)",
-	"i=sqrt(-1)",
-	"trange=(-pi,pi)",
-	"xrange=(-10,10)",
-	"yrange=(-10,10)",
-	"last=0",
-	"trace=0",
-	"tty=0",
-	"cross(u,v)=(u[2]*v[3]-u[3]*v[2],u[3]*v[1]-u[1]*v[3],u[1]*v[2]-u[2]*v[1])",
-	"curl(u)=(d(u[3],y)-d(u[2],z),d(u[1],z)-d(u[3],x),d(u[2],x)-d(u[1],y))",
-	"div(u)=d(u[1],x)+d(u[2],y)+d(u[3],z)",
-	"ln(x)=log(x)",
-};
 
 void
 init(void)
 {
-	int i, n;
-
 	init_symbol_table();
 
 	prep();
@@ -64,21 +42,13 @@ init(void)
 	list(3);
 	imaginaryunit = pop();
 
-	n = sizeof init_script / sizeof (char *);
+	binding[PRATT] = zero;
 
-	for (i = 0; i < n; i++) {
-		if (pratt_flag) {
-			scan_with_pratt(init_script[i]);
-		} else {
-			scan(init_script[i]);
-		}
-		eval();
-		pop();
-	}
-
-	gc();
+	run_init_script();
 
 	prep();
+
+	gc();
 }
 
 void
@@ -88,8 +58,9 @@ prep(void)
 	tof = 0;
 
 	expanding = 1;
-	draw_flag = 0;
-	clear_flag = 0;
+	drawing = 0;
+
+	interrupt = 0;
 
 	p0 = symbol(NIL);
 	p1 = symbol(NIL);
@@ -107,10 +78,10 @@ char *
 scan_input(char *s)
 {
 	trace1 = s;
-	if (pratt_flag) {
-		s = scan_with_pratt(s);
-	} else {
+	if (iszero(binding[PRATT])) {
 		s = scan(s);
+	} else {
+		s = scan_with_pratt(s);
 	}
 	if (s) {
 		trace2 = s;
@@ -142,7 +113,7 @@ eval_and_print_result(void)
 void
 stop(char *s)
 {
-	if (draw_flag == 2)
+	if (drawing > 1)
 		longjmp(draw_stop_return, 1);
 
 	if (s) {
@@ -222,17 +193,12 @@ run_file(char *filename)
 
 	for (;;) {
 
-		expanding = 1;
-
 		s = scan_input(s);
 
 		if (s == NULL)
 			break; // end of input
 
 		eval_and_print_result();
-
-		if (clear_flag)
-			stop("run: clear not allowed in run file");
 	}
 
 	trace1 = t1;
@@ -330,4 +296,34 @@ eval_status(void)
 	printbuf(outbuf, BLACK);
 
 	push_symbol(NIL);
+}
+
+char *init_script[] = {
+	"e=exp(1)",
+	"i=sqrt(-1)",
+	"trange=(-pi,pi)",
+	"xrange=(-10,10)",
+	"yrange=(-10,10)",
+	"cross(u,v)=(u[2]*v[3]-u[3]*v[2],u[3]*v[1]-u[1]*v[3],u[1]*v[2]-u[2]*v[1])",
+	"curl(u)=(d(u[3],y)-d(u[2],z),d(u[1],z)-d(u[3],x),d(u[2],x)-d(u[1],y))",
+	"div(u)=d(u[1],x)+d(u[2],y)+d(u[3],z)",
+	"ln(x)=log(x)",
+	"last=0",
+	"tty=0",
+	NULL,
+};
+
+void
+run_init_script(void)
+{
+	char **s = init_script;
+	while (*s) {
+		if (iszero(binding[PRATT])) {
+			scan(*s++);
+		} else {
+			scan_with_pratt(*s++);
+		}
+		eval();
+		pop();
+	}
 }

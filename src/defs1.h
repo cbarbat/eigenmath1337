@@ -193,9 +193,10 @@ struct atom {
 
 #define PI		(15 * NSYM + 0)
 #define POLAR		(15 * NSYM + 1)
-#define PRIME		(15 * NSYM + 2)
-#define PRINT		(15 * NSYM + 3)
-#define PRODUCT		(15 * NSYM + 4)
+#define PRATT		(15 * NSYM + 2)
+#define PRIME		(15 * NSYM + 3)
+#define PRINT		(15 * NSYM + 4)
+#define PRODUCT		(15 * NSYM + 5)
 
 #define QUOTE		(16 * NSYM + 0)
 #define QUOTIENT	(16 * NSYM + 1)
@@ -252,7 +253,6 @@ struct atom {
 #define METAB		(26 * NSYM + 7)
 #define METAX		(26 * NSYM + 8)
 #define SPECX		(26 * NSYM + 9)
-#define PRATT		(26 * NSYM + 10)
 
 #define MAXPRIMETAB 10000
 #define MAXDIM 24

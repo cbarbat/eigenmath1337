@@ -153,4 +153,3 @@ rewrite_nib(void)
 
 	return n;
 }
-

@@ -159,13 +159,28 @@ clear_term(void)
 	update_display_request = 1;
 }
 
-extern "C" void
+extern "C" 
+void
 eval_clear(void)
 {
 	if (test_flag == 0)
 		clear_term();
-	clear_flag = 1;
-	push_symbol(NIL);
+
+	save_binding(symbol(PRATT));
+	save_binding(symbol(TRACE));
+	save_binding(symbol(TTY));
+
+	clear_symbols();
+
+	run_init_script();
+
+	gc(); // garbage collection
+
+	restore_binding(symbol(TTY));
+	restore_binding(symbol(TRACE));
+	restore_binding(symbol(PRATT));
+
+	push_symbol(NIL); // result
 }
 
 void

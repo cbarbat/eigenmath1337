@@ -1,6 +1,5 @@
+pratt=1
 -- ./eigenmath --latex latextest | tee foo.tex
-
-pratt(1)
 
 trace = 1
 

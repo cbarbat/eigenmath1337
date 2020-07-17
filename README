@@ -26,21 +26,31 @@ To generate MathJax output:
 
 MathML and MathJax results look best on Firefox.
 
-There is also a Visual Studio solution file:
+
+"I have often felt that programming is an art form,
+ whose real value can only be appreciated
+ by another versed in the same arcane art;
+ there are lovely gems and brilliant coups
+ hidden from human view and admiration, sometimes forever,
+ by the very nature of the process."
+
+ Ed Nather, The Story of Mel
+
+Calin Barbat: There is also a Visual Studio solution file:
 
 	EigenMath.sln
 
 It uses old GUI code from Eigenmath137 together
 with the newest Eigenmath code from George Weigt.
 
-I added a Pratt parser to this code base.
+Calin added a Pratt parser to this code base.
 
 To use the Pratt parser, issue this command at the
 Eigenmath prompt:
 
-	pratt(1)
+	pratt=1
 
 To switch back to the recursive descent parser instead:
 
-	pratt(0)
+	pratt=0
 

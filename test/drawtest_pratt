@@ -1,4 +1,4 @@
-pratt(1)
+pratt=1
 draw((0,0))
 draw(x)
 draw(-x)

@@ -273,6 +273,18 @@ eval_exit(void)
 	*/
 }
 
+extern "C"
+void
+malloc_kaput(void)
+{
+	fprintf(stderr, "malloc kaput\n");
+	PostMessage(
+		main_window,
+		WM_QUIT,
+		0,
+		0);
+}
+
 void
 echo_input(const char *s)
 {
@@ -401,6 +413,12 @@ static void
 MyRegisterClass(HINSTANCE hInstance)
 {
 	static WNDCLASSEX wcex;
+
+	if (zero == NULL) {
+		init();
+		prep();
+		binding[TRACE] = zero;
+	}
 
 	eval_clear();
 

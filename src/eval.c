@@ -106,19 +106,6 @@ eval_number(void)
 }
 
 void
-eval_pratt(void)
-{
-	push(cadr(p1));
-	eval();
-	p1 = pop();
-	if (iszero(p1))
-		pratt_flag = 0;
-	else if (isplusone(p1))
-		pratt_flag = 1;
-	push_integer(pratt_flag);
-}
-
-void
 eval_quote(void)
 {
 	push(cadr(p1));
@@ -155,8 +142,7 @@ eval_subst(void)
 void
 expand_expr(void)
 {
-	int t = expanding;
-	expanding = 1;
+	expanding++;
 	eval();
-	expanding = t;
+	expanding--;
 }

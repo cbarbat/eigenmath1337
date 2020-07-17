@@ -1,4 +1,4 @@
-pratt(1)
+pratt=1
 -- display all chars
 
 e = quote(e)
