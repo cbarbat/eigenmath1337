@@ -174,33 +174,27 @@ compare_rationals(struct atom *a, struct atom *b)
 double
 convert_rational_to_double(struct atom *p)
 {
-	int i, n, na, nb;
+
+	int i, n;
 	double a = 0.0, b = 0.0;
 
-	na = MLENGTH(p->u.q.a);
-	nb = MLENGTH(p->u.q.b);
+	// numerator
 
-	if (na < nb)
-		n = na;
-	else
-		n = nb;
-
+	n = MLENGTH(p->u.q.a);
 	for (i = 0; i < n; i++) {
-		a = a / 4294967296.0 + p->u.q.a[i];
-		b = b / 4294967296.0 + p->u.q.b[i];
+		a += p->u.q.a[i];
+		a = scalbn(a, -32);
 	}
+	a = scalbn(a, 32 * n);
 
-	if (na > nb)
-		for (i = nb; i < na; i++) {
-			a = a / 4294967296.0 + p->u.q.a[i];
-			b = b / 4294967296.0;
-		}
+	// denominator
 
-	if (na < nb)
-		for (i = na; i < nb; i++) {
-			a = a / 4294967296.0;
-			b = b / 4294967296.0 + p->u.q.b[i];
-		}
+	n = MLENGTH(p->u.q.b);
+	for (i = 0; i < n; i++) {
+		b += p->u.q.b[i];
+		b = scalbn(b, -32);
+	}
+	b = scalbn(b, 32 * n);
 
 	if (p->sign == MMINUS)
 		a = -a;
@@ -211,14 +205,41 @@ convert_rational_to_double(struct atom *p)
 void
 convert_double_to_rational(double d)
 {
+	int k;
+	unsigned int *a;
+	uint64_t u;
 	double e, x;
+
+	// do this first, 0.0 fails isnormal()
+
 	if (d == 0.0) {
 		push_integer(0);
 		return;
 	}
+
 	if (!isnormal(d))
 		stop("floating point value is nan or inf, cannot convert to rational number");
+
 	x = fabs(d);
+
+	// integer?
+
+	if (floor(x) == x) {
+		x = frexp(x, &k);
+		u = (uint64_t) scalbn(x, 64);
+		a = mnew(2);
+		a[0] = u;
+		a[1] = u >> 32;
+		push_rational_number(d < 0.0 ? MMINUS : MPLUS, a, mint(1));
+		push_integer(2);
+		push_integer(k - 64);
+		power();
+		multiply();
+		return;
+	}
+
+	// not integer
+
 	e = floor(log10(x)) + 1.0;
 	best_rational_approximation(x / pow(10.0, e));
 	push_integer(10);
