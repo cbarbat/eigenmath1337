@@ -29,14 +29,14 @@
 #define T_EQ 1010
 #define T_END 1011
 
-int token;
-int scan_mode;
-int scan_level;
+static int token;
+static int scan_mode;
+static int scan_level;
 int pptoken, ptoken, ppnewline_flag, pnewline_flag, newline_flag, newline_at_top_level;
 
-char *scan_str;
-char *token_str;
-char *token_buf;
+static char *scan_str;
+static char *token_str;
+static char *token_buf;
 char *ptoken_buf;
 
 #define MIN_BP 0
